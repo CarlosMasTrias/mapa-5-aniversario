@@ -155,7 +155,7 @@ export default {
   white-space: nowrap;
   pointer-events: none;
   z-index: 9999;
-  border: 1px solid rgba(255, 123, 0, 0.35);
+  border: 1px solid rgba(255, 77, 157, 0.35);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
@@ -171,7 +171,7 @@ export default {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: none;
-  border-top: 1px solid rgba(255, 123, 0, 0.2);
+  border-top: 1px solid rgba(255, 77, 157, 0.2);
   cursor: pointer;
   color: #fff;
   font-family: 'Space Grotesk', Arial, sans-serif;
@@ -185,7 +185,7 @@ export default {
 .fp-chevron {
   width: 18px;
   height: 18px;
-  color: #ff7b00;
+  color: #ff4d9d;
   flex-shrink: 0;
   transition: transform 0.3s ease;
 }
@@ -209,7 +209,7 @@ export default {
 }
 
 .fp-stats-visited {
-  color: #ff7b00;
+  color: #ff4d9d;
   font-weight: 700;
 }
 
@@ -223,7 +223,7 @@ export default {
   height: 12px;
   cursor: ns-resize;
   background: rgba(10, 14, 22, 0.97);
-  border-top: 1px solid rgba(255, 123, 0, 0.15);
+  border-top: 1px solid rgba(255, 77, 157, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,15 +232,15 @@ export default {
 }
 
 .fp-resize-handle:hover {
-  border-top-color: rgba(255, 123, 0, 0.6);
+  border-top-color: rgba(255, 77, 157, 0.6);
 }
 
 .fp-resize-handle:hover .fp-resize-dots {
-  color: rgba(255, 123, 0, 0.9);
+  color: rgba(255, 77, 157, 0.9);
 }
 
 .fp-resize-dots {
-  color: rgba(255, 123, 0, 0.35);
+  color: rgba(255, 77, 157, 0.35);
   font-size: 0.85rem;
   letter-spacing: 3px;
   line-height: 1;
@@ -273,7 +273,7 @@ export default {
 }
 
 .fp-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 123, 0, 0.3);
+  background: rgba(255, 77, 157, 0.3);
   border-radius: 99px;
 }
 
@@ -301,8 +301,8 @@ export default {
 }
 
 .fp-item--visited {
-  border-color: rgba(255, 123, 0, 0.25);
-  background: rgba(255, 123, 0, 0.06);
+  border-color: rgba(255, 77, 157, 0.25);
+  background: rgba(255, 77, 157, 0.06);
 }
 
 .fp-item--locked {
@@ -315,8 +315,8 @@ export default {
 }
 
 .fp-item--clickable:hover {
-  border-color: rgba(255, 123, 0, 0.8);
-  background: rgba(255, 123, 0, 0.12);
+  border-color: rgba(255, 77, 157, 0.8);
+  background: rgba(255, 77, 157, 0.12);
   transform: scale(1.15);
   filter: none;
   opacity: 1;
