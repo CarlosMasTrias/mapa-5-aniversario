@@ -29,8 +29,8 @@ import FlagPanel from './FlagPanel.vue';
 import { COUNTRY_NAMES } from '@/data/countries.js';
 import { toSlug } from '@/utils/slug.js';
 
-const ORANGE = 0xff4d9d;
-const ORANGE_HOVER = 0xe0358a;
+const ROSE = 0xe879a0;
+const ROSE_HOVER = 0xc25c82;
 
 const MICRO_STATES_GEOJSON = {
   type: 'FeatureCollection',
@@ -118,11 +118,11 @@ export default {
     });
 
     polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(ORANGE_HOVER),
+      fill: am5.color(ROSE_HOVER),
     });
 
     polygonSeries.mapPolygons.template.states.create("active", {
-      fill: am5.color(ORANGE_HOVER),
+      fill: am5.color(ROSE_HOVER),
     });
 
     polygonSeries.mapPolygons.template.events.on("click", (event) => {
@@ -167,11 +167,11 @@ export default {
     });
 
     tinySeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(ORANGE_HOVER),
+      fill: am5.color(ROSE_HOVER),
     });
 
     tinySeries.mapPolygons.template.states.create("active", {
-      fill: am5.color(ORANGE_HOVER),
+      fill: am5.color(ROSE_HOVER),
     });
 
     tinySeries.mapPolygons.template.events.on("click", (event) => {
@@ -200,7 +200,7 @@ export default {
       return countries.map(id => ({
         id,
         visited: true,
-        polygonSettings: { fill: am5.color(ORANGE) },
+        polygonSettings: { fill: am5.color(ROSE) },
       }));
     },
     buildTinyData(countries) {
@@ -210,7 +210,7 @@ export default {
         .map(id => ({
           id,
           visited: true,
-          polygonSettings: { fill: am5.color(ORANGE) },
+          polygonSettings: { fill: am5.color(ROSE) },
         }));
     },
   },
@@ -236,7 +236,7 @@ export default {
   background: rgba(13, 17, 23, 0.82);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 77, 157, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0.28);
   border-radius: 18px;
   padding: 18px 22px 16px;
   min-width: 175px;
@@ -264,7 +264,7 @@ export default {
 .visited-num {
   font-size: 2.4rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff4d9d, #ff9dd3);
+  background: linear-gradient(135deg, #e879a0, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -309,7 +309,7 @@ export default {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff4d9d, #ff9dd3);
+  background: linear-gradient(90deg, #e879a0, #c084fc);
   border-radius: 99px;
   transition: width 0.6s ease;
 }
@@ -317,7 +317,7 @@ export default {
 .progress-text {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #ff4d9d;
+  color: #e879a0;
   letter-spacing: 0.3px;
   min-width: 36px;
   text-align: right;

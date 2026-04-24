@@ -27,7 +27,7 @@ export default {
 
 body {
   font-family: 'Space Grotesk', Arial, sans-serif;
-  background: #0d1117;
+  background: #0c0c14;
   color: #fff;
   min-height: 100vh;
 }
@@ -37,10 +37,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 12% 70%, rgba(255, 77, 157, 0.16) 0%, transparent 52%),
-    radial-gradient(ellipse at 88% 12%, rgba(140, 20, 90, 0.32) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(70, 10, 55, 0.22) 0%, transparent 42%),
-    #0d1117;
+    radial-gradient(ellipse at 8% 72%, rgba(232, 121, 160, 0.13) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 8%,  rgba(168, 85, 247, 0.18) 0%, transparent 48%),
+    radial-gradient(ellipse at 48% 98%, rgba(110, 40, 160, 0.12) 0%, transparent 40%),
+    #0c0c14;
 }
 
 main {
@@ -53,14 +53,14 @@ main {
   align-items: center;
   padding: 0 36px;
   height: 68px;
-  background: rgba(13, 17, 23, 0.85);
+  background: rgba(12, 12, 20, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 77, 157, 0.25);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.22);
   position: sticky;
   top: 0;
   z-index: 200;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
 }
 
 .header-brand {
@@ -79,7 +79,7 @@ main {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #ff4d9d 0%, #ff9dd3 60%, #ffb3e6 100%);
+  background: linear-gradient(135deg, #e879a0 0%, #a855f7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
