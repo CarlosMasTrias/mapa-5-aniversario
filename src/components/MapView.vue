@@ -29,8 +29,50 @@ import FlagPanel from './FlagPanel.vue';
 import { COUNTRY_NAMES } from '@/data/countries.js';
 import { toSlug } from '@/utils/slug.js';
 
-const ROSE = 0xe879a0;
-const ROSE_HOVER = 0xc25c82;
+// Países no visitados: gris apagado para que parezcan "bloqueados"
+const LOCKED_FILL   = 0x37474F;
+const LOCKED_STROKE = 0x455A64;
+const LOCKED_HOVER  = 0x546E7A;
+
+// Color único por país visitado (paleta Material Design 500).
+// Restricción verificada: ningún par de países con frontera comparte color.
+const COUNTRY_COLORS = {
+  US: 0xFF5722, // Deep Orange
+  MX: 0xCDDC39, // Lime
+  CR: 0x009688, // Teal
+  ES: 0xFFC107, // Amber
+  PT: 0x673AB7, // Deep Purple
+  FR: 0xF44336, // Red
+  GB: 0x8BC34A, // Light Green
+  IE: 0x3F51B5, // Indigo
+  IT: 0x9C27B0, // Purple
+  SK: 0xE91E63, // Pink
+  CH: 0x4CAF50, // Green
+  AT: 0x2196F3, // Blue
+  SE: 0x03A9F4, // Light Blue
+  FI: 0xFDD835, // Yellow
+  VA: 0xFF9800, // Orange
+  AD: 0x00BCD4, // Cyan
+};
+
+const COUNTRY_HOVER_COLORS = {
+  US: 0xBF360C,
+  MX: 0x827717,
+  CR: 0x004D40,
+  ES: 0xFF6F00,
+  PT: 0x311B92,
+  FR: 0xC62828,
+  GB: 0x33691E,
+  IE: 0x1A237E,
+  IT: 0x6A1B9A,
+  SK: 0x880E4F,
+  CH: 0x2E7D32,
+  AT: 0x1565C0,
+  SE: 0x01579B,
+  FI: 0xF57F17,
+  VA: 0xE65100,
+  AD: 0x006064,
+};
 
 const MICRO_STATES_GEOJSON = {
   type: 'FeatureCollection',
@@ -108,8 +150,8 @@ export default {
     );
 
     polygonSeries.mapPolygons.template.setAll({
-      fill: am5.color(0x4a3c12),
-      stroke: am5.color(0x6a561a),
+      fill: am5.color(LOCKED_FILL),
+      stroke: am5.color(LOCKED_STROKE),
       strokeWidth: 0.5,
       tooltipText: "{name}",
       toggleKey: "active",
@@ -117,12 +159,24 @@ export default {
       templateField: "polygonSettings",
     });
 
-    polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(ROSE_HOVER),
+    polygonSeries.mapPolygons.template.states.create("active", {
+      fill: am5.color(LOCKED_HOVER),
     });
 
-    polygonSeries.mapPolygons.template.states.create("active", {
-      fill: am5.color(ROSE_HOVER),
+    polygonSeries.mapPolygons.template.events.on("pointerover", (ev) => {
+      const ctx = ev.target.dataItem?.dataContext;
+      const color = ctx?.visited
+        ? (COUNTRY_HOVER_COLORS[ctx.id] ?? LOCKED_HOVER)
+        : LOCKED_HOVER;
+      ev.target.set("fill", am5.color(color));
+    });
+
+    polygonSeries.mapPolygons.template.events.on("pointerout", (ev) => {
+      const ctx = ev.target.dataItem?.dataContext;
+      const color = ctx?.visited
+        ? (COUNTRY_COLORS[ctx.id] ?? LOCKED_FILL)
+        : LOCKED_FILL;
+      ev.target.set("fill", am5.color(color));
     });
 
     polygonSeries.mapPolygons.template.events.on("click", (event) => {
@@ -157,8 +211,8 @@ export default {
     );
 
     tinySeries.mapPolygons.template.setAll({
-      fill: am5.color(0x4a3c12),
-      stroke: am5.color(0x6a561a),
+      fill: am5.color(LOCKED_FILL),
+      stroke: am5.color(LOCKED_STROKE),
       strokeWidth: 0.5,
       tooltipText: "{name}",
       toggleKey: "active",
@@ -166,12 +220,24 @@ export default {
       templateField: "polygonSettings",
     });
 
-    tinySeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(ROSE_HOVER),
+    tinySeries.mapPolygons.template.states.create("active", {
+      fill: am5.color(LOCKED_HOVER),
     });
 
-    tinySeries.mapPolygons.template.states.create("active", {
-      fill: am5.color(ROSE_HOVER),
+    tinySeries.mapPolygons.template.events.on("pointerover", (ev) => {
+      const ctx = ev.target.dataItem?.dataContext;
+      const color = ctx?.visited
+        ? (COUNTRY_HOVER_COLORS[ctx.id] ?? LOCKED_HOVER)
+        : LOCKED_HOVER;
+      ev.target.set("fill", am5.color(color));
+    });
+
+    tinySeries.mapPolygons.template.events.on("pointerout", (ev) => {
+      const ctx = ev.target.dataItem?.dataContext;
+      const color = ctx?.visited
+        ? (COUNTRY_COLORS[ctx.id] ?? LOCKED_FILL)
+        : LOCKED_FILL;
+      ev.target.set("fill", am5.color(color));
     });
 
     tinySeries.mapPolygons.template.events.on("click", (event) => {
@@ -200,7 +266,7 @@ export default {
       return countries.map(id => ({
         id,
         visited: true,
-        polygonSettings: { fill: am5.color(ROSE) },
+        polygonSettings: { fill: am5.color(COUNTRY_COLORS[id] ?? LOCKED_FILL) },
       }));
     },
     buildTinyData(countries) {
@@ -210,7 +276,7 @@ export default {
         .map(id => ({
           id,
           visited: true,
-          polygonSettings: { fill: am5.color(ROSE) },
+          polygonSettings: { fill: am5.color(COUNTRY_COLORS[id] ?? LOCKED_FILL) },
         }));
     },
   },

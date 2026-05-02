@@ -212,8 +212,16 @@ export default {
 
     // ── Photos ───────────────────────────────────────────
     async handleFiles(event) {
-      const files = Array.from(event.target.files).filter(f => f.type.startsWith('image/'))
+      const all = Array.from(event.target.files)
       event.target.value = ''
+
+      const heic = all.filter(f => /\.heic$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif')
+      const files = all.filter(f => f.type.startsWith('image/') && !heic.includes(f))
+
+      if (heic.length) {
+        this.saveError = `${heic.length} archivo${heic.length > 1 ? 's' : ''} .heic ignorado${heic.length > 1 ? 's' : ''}. Conviértelos primero con: npm run convert-heic`
+      }
+
       if (!files.length) return
       this.isUploading = true
 

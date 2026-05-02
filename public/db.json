@@ -1,3 +1,35 @@
 {
-  "countries": {}
+  "countries": {
+    "US": {
+      "cities": [
+        {
+          "name": "Nueva York",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "FI": {
+      "cities": [
+        {
+          "name": "Inari",
+          "description": "",
+          "media": [
+            {
+              "id": "1777735868828_5pdf28o80x3",
+              "type": "photo",
+              "src": "/fotos/FI/inari/1777735868609_06vish3ohmgb.jpg",
+              "caption": ""
+            },
+            {
+              "id": "1777735868467_j9q3u0ogh5",
+              "type": "photo",
+              "src": "/fotos/FI/inari/1777735868132_rj2q06lvhuh.jpg",
+              "caption": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
 }
