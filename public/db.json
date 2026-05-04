@@ -20,11 +20,11 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835300249_2on15lv5llw.jpg",
               "caption": "en la cathedral",
-              "size": "small",
-              "crop": true,
+              "size": "large",
+              "crop": false,
               "cropX": 77,
               "cropY": 51,
-              "croppedSrc": "/fotos/FI/inari/1777918270784_t9qhv89n0c.jpg"
+              "croppedSrc": "/fotos/FI/inari/1777924729929_jess4m3cya.jpg"
             },
             {
               "id": "1777835300663_woclzwgdgq8",
@@ -104,11 +104,6 @@
               "croppedSrc": null
             },
             {
-              "id": "1777840276437_nb8t7mgiuwf",
-              "type": "text",
-              "content": "que diceeeeeeeeeeen adñ jasdñ lkjasdñ asdñfasdj ñaksdj fñaskd ñalsdjfñadsl flñasdjf ñlasddal jañdlf jakd jañsd alñkds jñasld fjañsld jfañs fañsld jfañsd fjalsd fjañsld fjañsld fjañsldf jasd fjasdañsd jñasdk jlk"
-            },
-            {
               "id": "1777835302586_qc8vihzknt",
               "type": "photo",
               "src": "/fotos/FI/inari/1777835302550_34mqyj071sn.jpg",
@@ -118,6 +113,11 @@
               "cropX": 50,
               "cropY": 50,
               "croppedSrc": null
+            },
+            {
+              "id": "1777840276437_nb8t7mgiuwf",
+              "type": "text",
+              "content": "que diceeeeeeeeeeen adñ jasdñ lkjasdñ asdñfasdj ñaksdj fñaskd ñalsdjfñadsl flñasdjf ñlasddal jañdlf jakd jañsd alñkds jñasld fjañsld jfañs fañsld jfañsd fjalsd fjañsld fjañsld fjañsldf jasd fjasdañsd jñasdk jlk"
             },
             {
               "id": "1777835302752_ufzee7lq29n",
