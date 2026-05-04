@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-String \"css\")",
+      "Bash(node -e \"const p = require\\('./node_modules/cropperjs/package.json'\\); console.log\\('version:', p.version\\); console.log\\('main:', p.main\\); console.log\\('module:', p.module\\)\")",
+      "Bash(npm cache *)",
+      "Bash(rm -rf node_modules/cropperjs)",
+      "Bash(node -e \"const p=require\\('./node_modules/cropperjs/package.json'\\);console.log\\(p.version,p.main,p.module,JSON.stringify\\(p.exports\\)\\)\")"
+    ]
+  }
+}
