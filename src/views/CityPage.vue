@@ -31,155 +31,188 @@
           rows="3" @change="saveAll" />
       </div>
 
-      <div class="toolbar">
-        <span class="toolbar-count">{{ media.length }} elemento{{ media.length !== 1 ? 's' : '' }}</span>
-        <div class="toolbar-actions">
+      <!-- Media empty state (no photos yet) -->
+      <div v-if="media.length === 0" class="media-empty">
+        <div class="media-empty-icon">📸</div>
+        <p class="media-empty-title">Aún no hay fotos ni vídeos</p>
+        <p class="media-empty-sub">Pulsa "Añadir fotos" para empezar el álbum de {{ cityData.name }}</p>
+        <div class="toolbar toolbar--empty">
           <button class="toolbar-btn toolbar-btn--rose" @click="$refs.fileInput.click()" :disabled="isUploading">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             {{ isUploading ? 'Procesando...' : 'Añadir fotos' }}
           </button>
-          <button class="toolbar-btn" @click="showVideoInput = !showVideoInput">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-            Añadir vídeo
+          <input ref="fileInput" type="file" accept="image/*" multiple style="display:none" @change="handleFiles" />
+        </div>
+      </div>
+
+      <!-- Editor section (above album, collapsed by default) -->
+      <div v-if="media.length > 0" class="editor-section">
+        <div class="editor-top-row">
+          <button class="toggle-editor-btn" @click="elementsOpen = !elementsOpen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path v-if="!elementsOpen" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              <path v-else d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            {{ elementsOpen ? 'Ocultar editor' : 'Editar elementos' }}
           </button>
-          <button class="toolbar-btn toolbar-btn--amber" @click="addText">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
-            Añadir texto
-          </button>
         </div>
-        <input ref="fileInput" type="file" accept="image/*" multiple style="display:none" @change="handleFiles" />
-      </div>
 
-      <div v-if="showVideoInput" class="video-row">
-        <span class="video-label">Pon el archivo en <code>public/videos/</code> y escribe el nombre:</span>
-        <div class="video-inputs">
-          <input v-model="videoFilename" class="video-input" placeholder="Ej: paris-2024.mp4"
-            @keydown.enter="addVideo" @keydown.esc="showVideoInput = false" />
-          <button class="video-add-btn" :disabled="!videoFilename.trim()" @click="addVideo">Añadir</button>
-          <button class="video-cancel" @click="showVideoInput = false; videoFilename = ''">✕</button>
-        </div>
-      </div>
+        <div v-if="elementsOpen" class="editor-body">
 
-      <div v-if="isUploading" class="upload-indicator">
-        <span class="upload-spinner"></span>
-        Comprimiendo y guardando {{ uploadProgress }}...
-      </div>
+          <div v-if="saveError" class="save-error">
+            Error al guardar: {{ saveError }}
+            <button @click="saveError = ''">✕</button>
+          </div>
 
-      <div v-if="saveError" class="save-error">
-        ⚠️ Error al guardar: {{ saveError }}
-        <button @click="saveError = ''">✕</button>
-      </div>
+          <div v-if="isUploading" class="upload-indicator">
+            <span class="upload-spinner"></span>
+            Comprimiendo y guardando {{ uploadProgress }}...
+          </div>
 
-      <!-- Elements editor -->
-      <div v-if="media.length > 0" class="elements-section">
-        <div class="section-header-row">
-          <span class="section-label">Elementos</span>
-          <span v-if="media.length > 1" class="drag-hint">Arrastra para cambiar el orden</span>
-        </div>
-        <div class="media-grid">
-          <div
-            v-for="(item, index) in media"
-            :key="item.id"
-            class="media-card"
-            :class="{
-              'is-dragging': dragIndex === index,
-              'is-over': dragOverIndex === index && dragIndex !== index,
-              'card--text': item.type === 'text'
-            }"
-            draggable="true"
-            @dragstart="onDragStart($event, index)"
-            @dragover.prevent="onDragOver($event, index)"
-            @dragend="onDragEnd"
-            @drop.prevent
-          >
-            <div class="card-topbar">
-              <div class="card-handle">
-                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
-              </div>
-              <span class="card-type-badge" :class="'badge--' + item.type">
-                {{ item.type === 'photo' ? 'Foto' : item.type === 'video' ? 'Vídeo' : 'Texto' }}
-              </span>
-              <span class="card-order">#{{ index + 1 }}</span>
-              <button class="card-delete" @click="removeMedia(index)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <div class="toolbar">
+            <span class="toolbar-count">{{ media.length }} elemento{{ media.length !== 1 ? 's' : '' }}</span>
+            <div class="toolbar-actions">
+              <button class="toolbar-btn toolbar-btn--rose" @click="$refs.fileInput.click()" :disabled="isUploading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                {{ isUploading ? 'Procesando...' : 'Añadir fotos' }}
+              </button>
+              <button class="toolbar-btn" @click="showVideoInput = !showVideoInput">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                Añadir vídeo
+              </button>
+              <button class="toolbar-btn toolbar-btn--amber" @click="addText">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+                Añadir texto
               </button>
             </div>
-
-            <template v-if="item.type === 'photo'">
-              <div class="card-preview card-preview--photo" @click="openCropModal(item)">
-                <img :src="item.croppedSrc || item.src" class="card-img" />
-                <div class="crop-edit-overlay">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 2 3 2 3 22 21 22 21 16"/><line x1="15" y1="9" x2="20" y2="4"/>
-                    <polyline points="20 9 20 4 15 4"/>
-                  </svg>
-                  {{ item.croppedSrc ? 'Editar recorte' : 'Recortar foto' }}
-                </div>
-              </div>
-              <div class="card-controls-row">
-                <div class="card-ctrl-group">
-                  <span class="ctrl-label">Tamaño</span>
-                  <div class="ctrl-buttons">
-                    <button v-for="sz in photoSizes" :key="sz.val"
-                      class="ctrl-btn" :class="{ active: (item.size || 'medium') === sz.val }"
-                      @click="setSize(item, sz.val)">{{ sz.label }}</button>
-                  </div>
-                </div>
-                <div class="card-ctrl-group">
-                  <span class="ctrl-label">Vista</span>
-                  <div class="ctrl-buttons">
-                    <button class="ctrl-btn ctrl-btn--rose"
-                      :class="{ active: item.crop !== false }"
-                      @click="setCrop(item, true)">Recortar</button>
-                    <button class="ctrl-btn"
-                      :class="{ active: item.crop === false }"
-                      @click="setCrop(item, false)">Completa</button>
-                  </div>
-                </div>
-              </div>
-              <div class="card-caption-wrap">
-                <input class="card-caption" v-model="item.caption"
-                  placeholder="Pie de foto..." @change="saveAll" />
-              </div>
-            </template>
-
-            <template v-else-if="item.type === 'text'">
-              <div class="card-text-body">
-                <textarea class="card-text-input" v-model="item.content"
-                  placeholder="Escribe algo aquí..." rows="5" @change="saveAll" />
-              </div>
-            </template>
-
-            <template v-else>
-              <div class="card-preview">
-                <div class="card-video-wrap">
-                  <video class="card-video" :src="item.src" controls preload="metadata" />
-                </div>
-              </div>
-              <div class="card-caption-wrap">
-                <input class="card-caption" v-model="item.caption"
-                  placeholder="Descripción del vídeo..." @change="saveAll" />
-              </div>
-            </template>
+            <input ref="fileInput" type="file" accept="image/*" multiple style="display:none" @change="handleFiles" />
           </div>
+
+          <div v-if="showVideoInput" class="video-row">
+            <span class="video-label">Pon el archivo en <code>public/videos/</code> y escribe el nombre:</span>
+            <div class="video-inputs">
+              <input v-model="videoFilename" class="video-input" placeholder="Ej: paris-2024.mp4"
+                @keydown.enter="addVideo" @keydown.esc="showVideoInput = false" />
+              <button class="video-add-btn" :disabled="!videoFilename.trim()" @click="addVideo">Añadir</button>
+              <button class="video-cancel" @click="showVideoInput = false; videoFilename = ''">✕</button>
+            </div>
+          </div>
+
+          <div class="elements-section">
+            <div class="section-header-row">
+              <span class="section-label">Elementos</span>
+              <span v-if="media.length > 1" class="drag-hint">Arrastra para cambiar el orden</span>
+            </div>
+            <div class="media-grid">
+              <div
+                v-for="(item, index) in media"
+                :key="item.id"
+                class="media-card"
+                :class="{
+                  'is-dragging': dragIndex === index,
+                  'is-over': dragOverIndex === index && dragIndex !== index,
+                  'card--text': item.type === 'text'
+                }"
+                draggable="true"
+                @dragstart="onDragStart($event, index)"
+                @dragover.prevent="onDragOver($event, index)"
+                @dragend="onDragEnd"
+                @drop.prevent
+              >
+                <div class="card-topbar">
+                  <div class="card-handle">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+                  </div>
+                  <span class="card-type-badge" :class="'badge--' + item.type">
+                    {{ item.type === 'photo' ? 'Foto' : item.type === 'video' ? 'Vídeo' : 'Texto' }}
+                  </span>
+                  <span class="card-order">#{{ index + 1 }}</span>
+                  <button class="card-delete" @click="removeMedia(index)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+
+                <template v-if="item.type === 'photo'">
+                  <div class="card-preview card-preview--photo" @click="openCropModal(item)">
+                    <img :src="item.croppedSrc || item.src" class="card-img" />
+                    <div class="crop-edit-overlay">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 2 3 2 3 22 21 22 21 16"/><line x1="15" y1="9" x2="20" y2="4"/>
+                        <polyline points="20 9 20 4 15 4"/>
+                      </svg>
+                      {{ item.croppedSrc ? 'Editar recorte' : 'Recortar foto' }}
+                    </div>
+                  </div>
+                  <div class="card-controls-row">
+                    <div class="card-ctrl-group">
+                      <span class="ctrl-label">Tamaño</span>
+                      <div class="ctrl-buttons">
+                        <button v-for="sz in photoSizes" :key="sz.val"
+                          class="ctrl-btn" :class="{ active: (item.size || 'medium') === sz.val }"
+                          @click="setSize(item, sz.val)">{{ sz.label }}</button>
+                      </div>
+                    </div>
+                    <div class="card-ctrl-group">
+                      <span class="ctrl-label">Vista</span>
+                      <div class="ctrl-buttons">
+                        <button class="ctrl-btn ctrl-btn--rose"
+                          :class="{ active: item.crop !== false }"
+                          @click="setCrop(item, true)">Recortar</button>
+                        <button class="ctrl-btn"
+                          :class="{ active: item.crop === false }"
+                          @click="setCrop(item, false)">Completa</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-caption-wrap">
+                    <input class="card-caption" v-model="item.caption"
+                      placeholder="Pie de foto..." @change="saveAll" />
+                  </div>
+                </template>
+
+                <template v-else-if="item.type === 'text'">
+                  <div class="card-controls-row">
+                    <div class="card-ctrl-group">
+                      <span class="ctrl-label">Tamaño</span>
+                      <div class="ctrl-buttons">
+                        <button v-for="sz in textSizes" :key="sz.val"
+                          class="ctrl-btn" :class="{ active: (item.size || 'm') === sz.val }"
+                          @click="setTextSize(item, sz.val)">{{ sz.label }}</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-text-body">
+                    <textarea class="card-text-input" v-model="item.content"
+                      placeholder="Escribe algo aquí..." rows="5" @change="saveAll" />
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="card-preview">
+                    <div class="card-video-wrap">
+                      <video class="card-video" :src="item.src" controls preload="metadata" />
+                    </div>
+                  </div>
+                  <div class="card-caption-wrap">
+                    <input class="card-caption" v-model="item.caption"
+                      placeholder="Descripción del vídeo..." @change="saveAll" />
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /editor-body -->
+
+        <div class="refresh-row">
+          <button class="refresh-btn" @click="refreshAlbum">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+            Actualizar álbum
+          </button>
         </div>
-      </div>
+      </div><!-- /editor-section -->
 
-      <div v-else class="media-empty">
-        <div class="media-empty-icon">📸</div>
-        <p class="media-empty-title">Aún no hay fotos ni vídeos</p>
-        <p class="media-empty-sub">Pulsa "Añadir fotos" para empezar el álbum de {{ cityData.name }}</p>
-      </div>
-
-      <!-- Refresh album button -->
-      <div v-if="media.length > 0" class="refresh-row">
-        <button class="refresh-btn" @click="refreshAlbum">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
-          Actualizar álbum
-        </button>
-      </div>
-
-      <!-- Travel album: isolated component, only updates when refreshAlbum() calls update() -->
+      <!-- Album shown after editor section -->
       <AlbumSection ref="albumSection" />
 
       <!-- Crop editor modal -->
@@ -240,10 +273,16 @@ export default {
       dragIndex: null,
       dragOverIndex: null,
       saveError: '',
+      elementsOpen: false,
       photoSizes: [
         { val: 'small', label: 'S' },
         { val: 'medium', label: 'M' },
         { val: 'large', label: 'L' },
+      ],
+      textSizes: [
+        { val: 's', label: 'S' },
+        { val: 'm', label: 'M' },
+        { val: 'l', label: 'L' },
       ],
     }
   },
@@ -363,6 +402,7 @@ export default {
     // ── Load ─────────────────────────────────────────────
     async loadData() {
       this.loading = true
+      this.elementsOpen = false
       this.db = await loadDb()
       const cities = this.db.countries?.[this.country.id]?.cities || []
       const city = cities.find(c => toSlug(c.name) === this.citySlug) || null
@@ -380,7 +420,6 @@ export default {
         return item
       })
       this.loading = false
-      // AlbumSection is mounted by now (loadData is async, mount happens before awaits resolve)
       await this.$nextTick()
       if (this.$refs.albumSection) {
         const rows = this.buildAlbumRows(JSON.parse(JSON.stringify(this.media)))
@@ -473,9 +512,11 @@ export default {
     },
 
     addText() {
-      this.media.push({ id: `${Date.now()}_${Math.random().toString(36).slice(2)}`, type: 'text', content: '' })
+      this.media.push({ id: `${Date.now()}_${Math.random().toString(36).slice(2)}`, type: 'text', size: 'm', content: '' })
       this.saveAll()
     },
+
+    setTextSize(item, sz) { item.size = sz; this.saveAll() },
 
     async removeMedia(index) {
       const item = this.media[index]
@@ -532,8 +573,21 @@ export default {
 .desc-textarea:focus { border-color: rgba(168,85,247,0.42); }
 .desc-textarea::placeholder { color: rgba(255,255,255,0.18); }
 
+/* ── Editor section ──────────────────────────────────── */
+.editor-section { margin-top: 36px; }
+
+.editor-top-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.refresh-row { display: flex; justify-content: center; margin-top: 24px; margin-bottom: 4px; }
+
+.toggle-editor-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); border-radius: 10px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.18s; }
+.toggle-editor-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.toggle-editor-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.2); }
+
+.editor-body { border: 1px solid rgba(168,85,247,0.12); border-radius: 16px; padding: 24px; background: rgba(255,255,255,0.015); }
+
 /* ── Toolbar ─────────────────────────────────────────── */
 .toolbar { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.toolbar--empty { margin-top: 16px; justify-content: center; }
 .toolbar-count { font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.25); flex: 1; }
 .toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .toolbar-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border-radius: 10px; padding: 8px 16px; font-size: 0.84rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: background 0.18s, border-color 0.18s, color 0.18s; }
@@ -569,7 +623,7 @@ export default {
 .save-error button { background: none; border: none; color: inherit; cursor: pointer; }
 
 /* ── Elements section ────────────────────────────────── */
-.elements-section { margin-top: 4px; }
+.elements-section { margin-top: 20px; }
 .section-header-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
 .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
 .drag-hint { font-size: 0.74rem; color: rgba(255,255,255,0.22); }
@@ -646,10 +700,9 @@ export default {
 .not-found, .loading { color: rgba(255,255,255,0.35); font-size: 0.95rem; }
 
 /* ── Refresh button ──────────────────────────────────── */
-.refresh-row { display: flex; justify-content: center; margin: 36px 0 0; }
-.refresh-btn { display: inline-flex; align-items: center; gap: 9px; background: rgba(168,85,247,0.14); border: 1px solid rgba(168,85,247,0.38); color: #c084fc; border-radius: 12px; padding: 11px 28px; font-size: 0.9rem; font-weight: 700; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
-.refresh-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-.refresh-btn:hover { background: rgba(168,85,247,0.26); border-color: rgba(168,85,247,0.65); color: #e9d5ff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(168,85,247,0.25); }
+.refresh-btn { display: inline-flex; align-items: center; gap: 9px; background: rgba(168,85,247,0.14); border: 1px solid rgba(168,85,247,0.38); color: #c084fc; border-radius: 10px; padding: 8px 18px; font-size: 0.84rem; font-weight: 700; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
+.refresh-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.refresh-btn:hover { background: rgba(168,85,247,0.26); border-color: rgba(168,85,247,0.65); color: #e9d5ff; }
 
 /* ── Crop modal ──────────────────────────────────────── */
 .crop-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.88); display: flex; align-items: center; justify-content: center; padding: 24px; animation: fadeIn 0.18s ease; }

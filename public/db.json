@@ -53,7 +53,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835300864_4neqfeyy9gq.jpg",
               "caption": "",
-              "size": "small",
+              "size": "medium",
               "crop": false,
               "cropX": 50,
               "cropY": 50,
@@ -75,7 +75,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835301683_s0t4kb8pmb.jpg",
               "caption": "",
-              "size": "small",
+              "size": "medium",
               "crop": true,
               "cropX": 50,
               "cropY": 50,
@@ -97,7 +97,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835302232_avrazsqthtf.jpg",
               "caption": "",
-              "size": "small",
+              "size": "large",
               "crop": true,
               "cropX": 50,
               "cropY": 50,
@@ -113,11 +113,6 @@
               "cropX": 50,
               "cropY": 50,
               "croppedSrc": null
-            },
-            {
-              "id": "1777840276437_nb8t7mgiuwf",
-              "type": "text",
-              "content": "que diceeeeeeeeeeen adñ jasdñ lkjasdñ asdñfasdj ñaksdj fñaskd ñalsdjfñadsl flñasdjf ñlasddal jañdlf jakd jañsd alñkds jñasld fjañsld jfañs fañsld jfañsd fjalsd fjañsld fjañsld fjañsldf jasd fjasdañsd jñasdk jlk"
             },
             {
               "id": "1777835302752_ufzee7lq29n",
@@ -146,7 +141,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835303287_lo3a87kaf7j.jpg",
               "caption": "",
-              "size": "medium",
+              "size": "large",
               "crop": true,
               "cropX": 50,
               "cropY": 50,
@@ -212,7 +207,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835305108_ml02tlxk72.jpg",
               "caption": "",
-              "size": "small",
+              "size": "large",
               "crop": true,
               "cropX": 50,
               "cropY": 50,
@@ -228,8 +223,31 @@
               "cropX": 50,
               "cropY": 50,
               "croppedSrc": null
+            },
+            {
+              "id": "1778082559431_1g9v7iv15gv",
+              "type": "text",
+              "size": "s",
+              "content": ""
+            },
+            {
+              "id": "1778082576301_4grobfjt1jb",
+              "type": "text",
+              "size": "m",
+              "content": ""
+            },
+            {
+              "id": "1778082578199_gf0e3fdd44j",
+              "type": "text",
+              "size": "l",
+              "content": ""
             }
           ]
+        },
+        {
+          "name": "Helsinki",
+          "description": "",
+          "media": []
         }
       ]
     }

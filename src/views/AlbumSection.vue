@@ -1,5 +1,5 @@
 <template>
-  <div v-if="rows.length > 0">
+  <div v-if="layout.placed.length > 0">
     <div class="album-divider">
       <div class="album-divider-line"></div>
       <span class="album-divider-text">Álbum de viaje</span>
@@ -19,8 +19,8 @@
           </div>
 
           <div v-else-if="p.item.type === 'text'"
-            class="album-text"
-            :style="{ left: p.x + 'px', top: p.y + 'px', width: p.w + 'px' }">
+            class="album-postit"
+            :style="{ left: p.x + 'px', top: p.y + 'px', width: p.w + 'px', '--rot': photoRotation(p.item) + 'deg' }">
             {{ p.item.content }}
           </div>
 
@@ -56,121 +56,20 @@
 
 <script>
 // Frame padding constants (must match CSS)
-const FPH = 16 // horizontal frame padding: 8px left + 8px right
-const FPV = 40 // vertical frame padding: 8px top + 32px bottom
-const GAP = 20 // gap between items
+const FPH = 16
+const FPV = 40
+const GAP = 20
 
 export default {
   name: 'AlbumSection',
   data() {
     return {
       rows: [],
+      layout: { placed: [], totalH: 0 },
       lightboxItem: null,
-      aspectRatios: {},   // { [itemId]: naturalWidth/naturalHeight }
+      aspectRatios: {},
       containerWidth: 0,
     }
-  },
-  computed: {
-    layout() {
-      const W = this.containerWidth || Math.max(400, window.innerWidth - 160)
-      if (!this.rows.length) return { placed: [], totalH: 0 }
-
-      const vh = window.innerHeight
-      const sizeH = {
-        large:  Math.round(vh * 0.88),
-        medium: Math.round(vh * 0.44),
-        small:  Math.round(vh * 0.29),
-      }
-
-      const items = this.rows.flat().map(c => c.item)
-
-      // Compute frame dimensions for each item
-      const dims = items.map(item => {
-        if (item.type === 'photo') {
-          const imgH = sizeH[item.size || 'medium']
-          const ratio = this.aspectRatios[item.id] ?? 1.33 // default 4:3 while loading
-          const imgW = Math.min(Math.round(ratio * imgH), W - FPH)
-          return { item, w: imgW + FPH, h: imgH + FPV, imgW, imgH }
-        }
-        if (item.type === 'video') {
-          const h = Math.round(W * 9 / 16)
-          return { item, w: W, h, imgW: W, imgH: h }
-        }
-        // text: full width, height estimated from content length
-        const lines = Math.ceil((item.content?.length || 60) / 55)
-        const h = Math.max(100, lines * 30 + 48)
-        return { item, w: W, h, imgW: W, imgH: h }
-      })
-
-      // Skyline bin-packing algorithm
-      // sky = sorted array of non-overlapping segments { x1, x2, y }
-      // y = current "floor" (top of available space) at each x position
-      let sky = [{ x1: 0, x2: W, y: 0 }]
-      const placed = []
-
-      for (const d of dims) {
-        const { w, h } = d
-
-        // Find best position: minimum y, leftmost x among ties
-        let bestX = 0, bestY = Infinity
-
-        for (const seg of sky) {
-          const x = seg.x1
-          if (x + w > W) continue  // item doesn't fit from here
-
-          // Find the maximum floor in the range [x, x+w]
-          let maxY = 0
-          for (const s of sky) {
-            if (s.x2 <= x || s.x1 >= x + w) continue
-            if (s.y > maxY) maxY = s.y
-          }
-
-          if (maxY < bestY || (maxY === bestY && x < bestX)) {
-            bestY = maxY
-            bestX = x
-          }
-        }
-
-        if (bestY === Infinity) {
-          // No valid position: start fresh row at current maximum floor
-          bestY = Math.max(...sky.map(s => s.y))
-          bestX = 0
-          sky = [{ x1: 0, x2: W, y: bestY }]
-        }
-
-        // Add vertical gap only when stacking below something
-        const placeY = bestY > 0 ? bestY + GAP : 0
-
-        placed.push({ item: d.item, x: bestX, y: placeY, w: d.w, h: d.h, imgW: d.imgW, imgH: d.imgH })
-
-        // Update skyline: frame occupies [bestX, min(bestX+w+GAP, W)]
-        // The +GAP on x2 reserves horizontal gap space for the next neighbour
-        const updateX2 = Math.min(bestX + w + GAP, W)
-        sky = this.skyUpdate(sky, bestX, updateX2, placeY + h)
-      }
-
-      // Center each visual row (group items by their top-y, then shift to center)
-      const rowMap = new Map()
-      for (const p of placed) {
-        if (!rowMap.has(p.y)) rowMap.set(p.y, [])
-        rowMap.get(p.y).push(p)
-      }
-      for (const rowItems of rowMap.values()) {
-        const minX = Math.min(...rowItems.map(p => p.x))
-        const maxX = Math.max(...rowItems.map(p => p.x + p.w))
-        const offset = Math.round((W - (maxX - minX)) / 2) - minX
-        for (const p of rowItems) p.x += offset
-      }
-
-      const totalH = Math.max(...sky.map(s => s.y)) + GAP * 2
-      return { placed, totalH }
-    },
-  },
-  watch: {
-    rows(newRows) {
-      this.$nextTick(() => this.measureContainer())
-      this.loadAspectRatios(newRows.flat().map(c => c.item))
-    },
   },
   mounted() {
     window.addEventListener('keydown', this.onKeydown)
@@ -183,16 +82,25 @@ export default {
   methods: {
     update(rows) {
       this.rows = rows
+      this.$nextTick(() => {
+        this.measureContainer()
+        this.layout = this._buildLayout(rows)
+        this._loadMissingRatios(rows.flat().map(c => c.item))
+      })
     },
 
     measureContainer() {
       if (this.$refs.albumEl) {
-        // albumEl clientWidth includes its own 32px*2 padding
         this.containerWidth = this.$refs.albumEl.clientWidth - 64
       }
     },
 
-    onResize() { this.measureContainer() },
+    onResize() {
+      this.measureContainer()
+      if (this.rows.length) {
+        this.layout = this._buildLayout(this.rows)
+      }
+    },
 
     onKeydown(e) {
       if (e.key === 'Escape' && this.lightboxItem) this.lightboxItem = null
@@ -204,27 +112,139 @@ export default {
       return item.crop !== false && item.croppedSrc ? item.croppedSrc : item.src
     },
 
-    loadAspectRatios(items) {
-      for (const item of items) {
-        if (item.type !== 'photo' || this.aspectRatios[item.id] !== undefined) continue
+    _loadMissingRatios(items) {
+      const toLoad = items.filter(
+        item => item.type === 'photo' && this.aspectRatios[item.id] === undefined
+      )
+      if (!toLoad.length) return
+
+      const promises = toLoad.map(item => new Promise(resolve => {
         const img = new Image()
         img.onload = () => {
           this.aspectRatios[item.id] = img.naturalWidth / img.naturalHeight
+          resolve()
         }
+        img.onerror = () => resolve()
         img.src = this.imgSrc(item)
+      }))
+
+      // One single recompute after ALL missing ratios are loaded
+      Promise.all(promises).then(() => {
+        this.layout = this._buildLayout(this.rows)
+      })
+    },
+
+    _buildLayout(rows) {
+      const W = this.containerWidth || Math.max(400, window.innerWidth - 160)
+      if (!rows.length) return { placed: [], totalH: 0 }
+
+      const vh = window.innerHeight
+      const sizeH = {
+        large:  Math.round(vh * 0.88),
+        medium: Math.round(vh * 0.44),
+        small:  Math.round(vh * 0.29),
       }
+
+      const items = rows.flat().map(c => c.item)
+
+      const dims = items.map(item => {
+        if (item.type === 'photo') {
+          const imgH = sizeH[item.size || 'medium']
+          const ratio = this.aspectRatios[item.id] ?? 1.33
+          const imgW = Math.min(Math.round(ratio * imgH), W - FPH)
+          return { item, w: imgW + FPH, h: imgH + FPV, imgW, imgH }
+        }
+        if (item.type === 'video') {
+          const h = Math.round(W * 9 / 16)
+          return { item, w: W, h, imgW: W, imgH: h }
+        }
+        const vw = window.innerWidth
+        const textW = Math.min(
+          { l: Math.round(vw / 3), m: Math.round(vw / 4), s: Math.round(vw / 5) }[item.size || 'm'],
+          W
+        )
+        const content = item.content || ''
+        const charsPerLine = Math.max(1, Math.floor((textW - 28) / 8))
+        const lines = content.split('\n').reduce((acc, line) => {
+          return acc + Math.max(1, Math.ceil((line.length || 1) / charsPerLine))
+        }, 0) || 1
+        const h = 32 + lines * 24
+        return { item, w: textW, h, imgW: textW, imgH: h }
+      })
+
+      let sky = [{ x1: 0, x2: W, y: 0 }]
+      const placed = []
+
+      for (const d of dims) {
+        const { w, h } = d
+        let bestX = 0, bestY = Infinity
+
+        for (const seg of sky) {
+          const x = seg.x1
+          if (x + w > W) continue
+          let maxY = 0
+          for (const s of sky) {
+            if (s.x2 <= x || s.x1 >= x + w) continue
+            if (s.y > maxY) maxY = s.y
+          }
+          if (maxY < bestY || (maxY === bestY && x < bestX)) {
+            bestY = maxY; bestX = x
+          }
+        }
+
+        if (bestY === Infinity) {
+          bestY = Math.max(...sky.map(s => s.y))
+          bestX = 0
+          sky = [{ x1: 0, x2: W, y: bestY }]
+        }
+
+        const placeY = bestY > 0 ? bestY + GAP : 0
+        placed.push({ item: d.item, x: bestX, y: placeY, w: d.w, h: d.h, imgW: d.imgW, imgH: d.imgH })
+
+        const updateX2 = Math.min(bestX + w + GAP, W)
+        sky = this._skyUpdate(sky, bestX, updateX2, placeY + h)
+      }
+
+      // Center each visual row — only if centering won't cause overlaps with other items
+      const rowMap = new Map()
+      for (const p of placed) {
+        if (!rowMap.has(p.y)) rowMap.set(p.y, [])
+        rowMap.get(p.y).push(p)
+      }
+      const rowList = [...rowMap.values()].sort((a, b) => a[0].y - b[0].y)
+      for (const rowItems of rowList) {
+        const minX = Math.min(...rowItems.map(p => p.x))
+        const maxX = Math.max(...rowItems.map(p => p.x + p.w))
+        const offset = Math.round((W - (maxX - minX)) / 2) - minX
+        if (!offset) continue
+        const wouldOverlap = placed.some(other => {
+          if (rowItems.includes(other)) return false
+          return rowItems.some(item => {
+            if (item.y + item.h <= other.y || other.y + other.h <= item.y) return false
+            const nx = item.x + offset
+            return nx < other.x + other.w && nx + item.w > other.x
+          })
+        })
+        if (!wouldOverlap) {
+          for (const p of rowItems) p.x += offset
+        }
+      }
+
+      const totalH = Math.max(...sky.map(s => s.y)) + GAP * 2
+      return { placed, totalH }
     },
 
     photoRotation(item) {
       const id = item.id || ''
       let h = 0
       for (let i = 0; i < id.length; i++) h = ((h * 31) + id.charCodeAt(i)) | 0
-      const maxRot = { small: 3.5, medium: 2, large: 0.7 }[item.size || 'medium']
+      const maxRot = item.type === 'text'
+        ? 2.5
+        : { small: 3.5, medium: 2, large: 0.7 }[item.size || 'medium']
       return (((((h >>> 0) % 1000) / 1000) * 2 - 1) * maxRot).toFixed(2)
     },
 
-    // Update the skyline: raise floor to newY in range [x1, x2]
-    skyUpdate(sky, x1, x2, newY) {
+    _skyUpdate(sky, x1, x2, newY) {
       const result = []
       for (const s of sky) {
         if (s.x2 <= x1 || s.x1 >= x2) {
@@ -236,7 +256,6 @@ export default {
         }
       }
       result.sort((a, b) => a.x1 - b.x1)
-      // Merge adjacent segments with same y
       const merged = []
       for (const s of result) {
         const last = merged[merged.length - 1]
@@ -265,7 +284,9 @@ export default {
 .album-photo-img { display: block; }
 .album-photo-caption { text-align: center; padding-top: 5px; font-size: 0.7rem; color: #7a6555; font-style: italic; line-height: 1.4; font-family: Georgia, serif; }
 
-.album-text { position: absolute; background: #fffdf4; border: 1px solid rgba(180,155,120,0.28); border-radius: 3px; padding: 16px 18px; box-shadow: 1px 3px 10px rgba(0,0,0,0.07); font-family: Georgia, 'Times New Roman', serif; font-size: 0.92rem; line-height: 1.85; color: #4a3828; font-style: italic; white-space: pre-wrap; word-break: break-word; box-sizing: border-box; background-image: repeating-linear-gradient(transparent, transparent 28px, rgba(160,135,110,0.11) 28px, rgba(160,135,110,0.11) 29px); background-size: 100% 29px; background-position: 0 18px; }
+.album-postit { position: absolute; background: #fef08a; padding: 14px 14px 16px; box-shadow: 3px 6px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1); transform: rotate(var(--rot, 0deg)); transform-origin: center; transition: transform 0.3s ease, box-shadow 0.3s ease; z-index: 2; font-family: Georgia, 'Times New Roman', serif; font-size: 0.88rem; line-height: 1.65; color: #3d2e00; font-style: italic; white-space: pre-wrap; word-break: break-word; box-sizing: border-box; }
+.album-postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.07); }
+.album-postit:hover { transform: rotate(0deg) scale(1.04) !important; box-shadow: 5px 10px 32px rgba(0,0,0,0.24); z-index: 20; }
 
 .album-video { position: absolute; background: #111; border-radius: 6px; overflow: hidden; box-shadow: 2px 5px 20px rgba(0,0,0,0.28); cursor: zoom-in; }
 .album-video-el { width: 100%; aspect-ratio: 16/9; display: block; }
