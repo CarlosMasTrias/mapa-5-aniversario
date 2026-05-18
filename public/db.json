@@ -27,17 +27,6 @@
               "croppedSrc": "/fotos/FI/inari/1777924729929_jess4m3cya.jpg"
             },
             {
-              "id": "1777835300663_woclzwgdgq8",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835300474_cv62qk9xrm.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": false,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
               "id": "1777835301351_wqeozntoqr",
               "type": "photo",
               "src": "/fotos/FI/inari/1777835301233_fdhhrda9gir.jpg",
@@ -49,12 +38,23 @@
               "croppedSrc": null
             },
             {
+              "id": "1777835300663_woclzwgdgq8",
+              "type": "photo",
+              "src": "/fotos/FI/inari/1777835300474_cv62qk9xrm.jpg",
+              "caption": "",
+              "size": "medium",
+              "crop": false,
+              "cropX": 50,
+              "cropY": 50,
+              "croppedSrc": null
+            },
+            {
               "id": "1777835301017_vjhsawz43dp",
               "type": "photo",
               "src": "/fotos/FI/inari/1777835300864_4neqfeyy9gq.jpg",
               "caption": "",
               "size": "medium",
-              "crop": false,
+              "crop": true,
               "cropX": 50,
               "cropY": 50,
               "croppedSrc": null
@@ -64,7 +64,7 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835301472_ao5xianvyqf.jpg",
               "caption": "",
-              "size": "small",
+              "size": "medium",
               "crop": true,
               "cropX": 50,
               "cropY": 50,
@@ -97,8 +97,8 @@
               "type": "photo",
               "src": "/fotos/FI/inari/1777835302232_avrazsqthtf.jpg",
               "caption": "",
-              "size": "large",
-              "crop": true,
+              "size": "medium",
+              "crop": false,
               "cropX": 50,
               "cropY": 50,
               "croppedSrc": null
@@ -156,7 +156,7 @@
               "crop": true,
               "cropX": 50,
               "cropY": 50,
-              "croppedSrc": null
+              "croppedSrc": "/fotos/FI/inari/1779140503116_bpmmqz0htgv.jpg"
             },
             {
               "id": "1777835303921_3wx6v4yumdk",
