@@ -6,6 +6,171 @@
           "name": "Nueva York",
           "description": "",
           "media": []
+        },
+        {
+          "name": "San Francisco",
+          "description": "",
+          "media": [
+            {
+              "id": "local__local_media_san_francisco_IMG_20230901_WA0004_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230901-WA0004.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230902_WA0002_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230902-WA0002.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230902_WA0003_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230902-WA0003.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230902_WA0006_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230902-WA0006.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230904_WA0000_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230904-WA0000.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230904_WA0005_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG-20230904-WA0005.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230901_143319_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230901_143319.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230902_112006_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230902_112006.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230902_183103_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230902_183103.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230903_174353_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230903_174353.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230904_141732_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230904_141732.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230904_143611_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230904_143611.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_IMG_20230904_170507_jpg",
+              "type": "photo",
+              "src": "/local-media/san-francisco/IMG_20230904_170507.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_VID_20230902_WA0008_mp4",
+              "type": "video",
+              "src": "/local-media/san-francisco/VID-20230902-WA0008.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_VID_20230904_WA0003_mp4",
+              "type": "video",
+              "src": "/local-media/san-francisco/VID-20230904-WA0003.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_VID_20230904_WA0004_mp4",
+              "type": "video",
+              "src": "/local-media/san-francisco/VID-20230904-WA0004.mp4",
+              "size": "large",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_francisco_VID_20230904_135346_mp4",
+              "type": "video",
+              "src": "/local-media/san-francisco/VID_20230904_135346.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            }
+          ]
+        },
+        {
+          "name": "Florida",
+          "description": "",
+          "media": []
+        },
+        {
+          "name": "Los Ángeles",
+          "description": "",
+          "media": []
         }
       ]
     },
@@ -13,239 +178,125 @@
       "cities": [
         {
           "name": "Inari",
-          "description": "Fuimos a la catedral de helsinki a hacernos unas fotitos.\nLuego entramos.\nMas tarde fuimos al macdonalds.",
-          "media": [
-            {
-              "id": "1777835300264_zijje2w4ir",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835300249_2on15lv5llw.jpg",
-              "caption": "en la cathedral",
-              "size": "large",
-              "crop": false,
-              "cropX": 77,
-              "cropY": 51,
-              "croppedSrc": "/fotos/FI/inari/1777924729929_jess4m3cya.jpg"
-            },
-            {
-              "id": "1777835301351_wqeozntoqr",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835301233_fdhhrda9gir.jpg",
-              "caption": "",
-              "size": "large",
-              "crop": false,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835300663_woclzwgdgq8",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835300474_cv62qk9xrm.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": false,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835301017_vjhsawz43dp",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835300864_4neqfeyy9gq.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835301487_9z2p0e3d1nh",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835301472_ao5xianvyqf.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835301710_81dljb315f",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835301683_s0t4kb8pmb.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835302018_bixjnmr9hy4",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835301986_rnsqf8ddfha.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835302280_zy9c24tgff",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835302232_avrazsqthtf.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": false,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835302586_qc8vihzknt",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835302550_34mqyj071sn.jpg",
-              "caption": "",
-              "size": "small",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835302752_ufzee7lq29n",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835302732_nq9wx69858p.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835303035_flodegaizn6",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835302985_2f1h94kawrv.jpg",
-              "caption": "",
-              "size": "large",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835303389_kyuo8ve9lqc",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835303287_lo3a87kaf7j.jpg",
-              "caption": "",
-              "size": "large",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835303618_czm1m0jbi5",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835303602_jkv9evrhz7f.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": "/fotos/FI/inari/1779140503116_bpmmqz0htgv.jpg"
-            },
-            {
-              "id": "1777835303921_3wx6v4yumdk",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835303860_lbqvz61p9u.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835304285_bhfbu0mv65",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835304165_0kas67f9qamh.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835304588_ks53b6rnkj",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835304508_of2t752jcjc.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835304899_fql5fvoe8vo",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835304787_rilm0c3vvxn.jpg",
-              "caption": "",
-              "size": "large",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835305208_idrit4q5ccf",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835305108_ml02tlxk72.jpg",
-              "caption": "",
-              "size": "large",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1777835305500_4f74l9kv90f",
-              "type": "photo",
-              "src": "/fotos/FI/inari/1777835305420_yi4a14gz0wp.jpg",
-              "caption": "",
-              "size": "medium",
-              "crop": true,
-              "cropX": 50,
-              "cropY": 50,
-              "croppedSrc": null
-            },
-            {
-              "id": "1778082559431_1g9v7iv15gv",
-              "type": "text",
-              "size": "s",
-              "content": ""
-            },
-            {
-              "id": "1778082576301_4grobfjt1jb",
-              "type": "text",
-              "size": "m",
-              "content": ""
-            },
-            {
-              "id": "1778082578199_gf0e3fdd44j",
-              "type": "text",
-              "size": "l",
-              "content": ""
-            }
-          ]
+          "description": "",
+          "media": []
         },
         {
           "name": "Helsinki",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "MX": {
+      "cities": [
+        {
+          "name": "Cancún",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "CR": {
+      "cities": [
+        {
+          "name": "San José",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "PT": {
+      "cities": [
+        {
+          "name": "Oporto",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "IE": {
+      "cities": [
+        {
+          "name": "Dublín",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "GB": {
+      "cities": [
+        {
+          "name": "Cardiff",
+          "description": "",
+          "media": []
+        },
+        {
+          "name": "Liverpool",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "FR": {
+      "cities": [
+        {
+          "name": "París",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "IT": {
+      "cities": [
+        {
+          "name": "Roma",
+          "description": "",
+          "media": []
+        },
+        {
+          "name": "Milán",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "CH": {
+      "cities": [
+        {
+          "name": "Zúrich",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "AT": {
+      "cities": [
+        {
+          "name": "Viena",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "SK": {
+      "cities": [
+        {
+          "name": "Bratislava",
+          "description": "",
+          "media": []
+        }
+      ]
+    },
+    "SE": {
+      "cities": [
+        {
+          "name": "Estocolmo",
+          "description": "",
+          "media": []
+        },
+        {
+          "name": "Lulea",
           "description": "",
           "media": []
         }

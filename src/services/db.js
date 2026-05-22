@@ -23,15 +23,28 @@ export async function saveDb(data) {
 }
 
 // ── Upload photo (dev only) ───────────────────────────────
+// blob: Blob (compressed JPEG from canvas.toBlob)
 // Returns { src: '/fotos/XX/city/file.jpg' }
-export async function uploadPhoto({ countryId, citySlug, dataUrl }) {
+export async function uploadPhoto({ countryId, citySlug, blob }) {
   if (!IS_DEV) return null
-  const filename = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`
-  const res = await fetch('/api/photo', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ countryId, citySlug, filename, dataUrl }),
-  })
+  const form = new FormData()
+  form.append('countryId', countryId)
+  form.append('citySlug', citySlug)
+  form.append('file', blob, 'photo.jpg')
+  const res = await fetch('/api/photo', { method: 'POST', body: form })
+  return res.json()
+}
+
+// ── Upload video (dev only) ───────────────────────────────
+// file: File object (raw, no base64 encoding)
+// Returns { src: '/videos/file.mp4' }
+export async function uploadVideo({ countryId, citySlug, file }) {
+  if (!IS_DEV) return null
+  const form = new FormData()
+  form.append('countryId', countryId)
+  form.append('citySlug', citySlug)
+  form.append('file', file, file.name)
+  const res = await fetch('/api/video', { method: 'POST', body: form })
   return res.json()
 }
 

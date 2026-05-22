@@ -35,42 +35,28 @@
 
         <div v-if="isUploading" class="upload-indicator">
           <span class="upload-spinner"></span>
-          Comprimiendo y guardando {{ uploadProgress }}...
+          Subiendo {{ uploadProgress }}...
         </div>
 
         <div class="toolbar">
           <span class="toolbar-count">{{ media.length }} elemento{{ media.length !== 1 ? 's' : '' }}</span>
           <div class="toolbar-actions">
             <button class="toolbar-btn toolbar-btn--rose" @click="$refs.fileInput.click()" :disabled="isUploading">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              {{ isUploading ? 'Procesando...' : 'Añadir fotos' }}
-            </button>
-            <button class="toolbar-btn" @click="showVideoInput = !showVideoInput">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-              Añadir vídeo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              {{ isUploading ? 'Subiendo...' : 'Añadir contenido' }}
             </button>
             <button class="toolbar-btn toolbar-btn--amber" @click="addText">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
               Añadir texto
             </button>
           </div>
-          <input ref="fileInput" type="file" accept="image/*" multiple style="display:none" @change="handleFiles" />
-        </div>
-
-        <div v-if="showVideoInput" class="video-row">
-          <span class="video-label">Pon el archivo en <code>public/videos/</code> y escribe el nombre:</span>
-          <div class="video-inputs">
-            <input v-model="videoFilename" class="video-input" placeholder="Ej: paris-2024.mp4"
-              @keydown.enter="addVideo" @keydown.esc="showVideoInput = false" />
-            <button class="video-add-btn" :disabled="!videoFilename.trim()" @click="addVideo">Añadir</button>
-            <button class="video-cancel" @click="showVideoInput = false; videoFilename = ''">✕</button>
-          </div>
+          <input ref="fileInput" type="file" accept="image/*,video/*" multiple style="display:none" @change="handleFiles" />
         </div>
 
         <div v-if="media.length === 0" class="media-empty">
           <div class="media-empty-icon">📸</div>
           <p class="media-empty-title">Aún no hay fotos ni vídeos</p>
-          <p class="media-empty-sub">Pulsa "Añadir fotos" para empezar el álbum de {{ cityData.name }}</p>
+          <p class="media-empty-sub">Pulsa "Añadir contenido" para empezar el álbum de {{ cityData.name }}</p>
         </div>
 
         <div v-if="media.length > 0" class="elements-section">
@@ -163,14 +149,26 @@
               </template>
 
               <template v-else>
-                <div class="card-preview">
-                  <div class="card-video-wrap">
-                    <video class="card-video" :src="item.src" controls preload="metadata" />
+                <div class="card-preview card-preview--photo" @click="openCropModal(item)">
+                  <img v-if="item.thumbnailSrc" :src="item.thumbnailSrc" class="card-img" />
+                  <video v-else :src="item.src" class="card-img card-video-preview" preload="metadata" muted />
+                  <div class="crop-edit-overlay">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                    {{ item.thumbnailSrc ? 'Editar miniatura' : 'Recortar miniatura' }}
+                  </div>
+                </div>
+                <div class="card-controls-row">
+                  <div class="card-ctrl-group">
+                    <span class="ctrl-label">Tamaño</span>
+                    <div class="ctrl-buttons">
+                      <button v-for="sz in photoSizes" :key="sz.val"
+                        class="ctrl-btn" :class="{ active: (item.size || 'medium') === sz.val }"
+                        @click="item.size = sz.val">{{ sz.label }}</button>
+                    </div>
                   </div>
                 </div>
                 <div class="card-caption-wrap">
-                  <input class="card-caption" v-model="item.caption"
-                    placeholder="Descripción del vídeo..." />
+                  <input class="card-caption" v-model="item.caption" placeholder="Descripción del vídeo..." />
                 </div>
               </template>
             </div>
@@ -197,7 +195,7 @@
             </button>
           </div>
           <div class="crop-modal-body">
-            <img ref="cropperImage" :src="cropModal.src" class="crop-source-img" />
+            <img ref="cropperImage" :src="cropModalSrc || cropModal.src" class="crop-source-img" />
           </div>
           <div class="crop-modal-footer">
             <span class="crop-modal-hint">Arrastra para seleccionar el área a recortar</span>
@@ -219,7 +217,7 @@
 <script>
 import Cropper from 'cropperjs'
 import { ALL_COUNTRIES } from '@/data/countries.js'
-import { loadDb, saveDb, ensureCountry, uploadPhoto, deletePhoto } from '@/services/db.js'
+import { loadDb, saveDb, ensureCountry, uploadPhoto, uploadVideo, deletePhoto } from '@/services/db.js'
 import { toSlug } from '@/utils/slug.js'
 import heic2any from 'heic2any'
 
@@ -237,8 +235,8 @@ export default {
       saving: false,
       isUploading: false,
       uploadProgress: '',
-      showVideoInput: false,
-      videoFilename: '',
+      cropModalSrc: null,
+      lastLoadedKey: null,
       dragIndex: null,
       dragOverIndex: null,
       saveError: '',
@@ -272,9 +270,11 @@ export default {
   watch: {
     '$route.params': {
       immediate: true,
-      async handler(newParams, oldParams) {
+      async handler(newParams) {
         if (!this.country) return
-        if (newParams?.country === oldParams?.country && newParams?.city === oldParams?.city) return
+        const key = `${newParams?.country}/${newParams?.city}`
+        if (this.lastLoadedKey === key) return
+        this.lastLoadedKey = key
         await this.loadData()
       },
     },
@@ -296,23 +296,32 @@ export default {
     },
 
     async openCropModal(item) {
+      if (item.type === 'video') {
+        this.isCropping = true
+        try {
+          this.cropModalSrc = await this.captureVideoFrame(item.src)
+        } catch (e) {
+          this.saveError = 'No se pudo capturar el frame del vídeo'
+          this.isCropping = false
+          return
+        }
+        this.isCropping = false
+      } else {
+        this.cropModalSrc = null
+      }
       this.cropModal = item
       await this.$nextTick()
       if (this.cropper) { this.cropper.destroy(); this.cropper = null }
       this.cropper = new Cropper(this.$refs.cropperImage, {
-        viewMode: 1,
-        zoomOnWheel: true,
-        background: true,
-        autoCropArea: 0.85,
-        movable: true,
-        rotatable: false,
-        scalable: false,
+        viewMode: 1, zoomOnWheel: true, background: true,
+        autoCropArea: 0.85, movable: true, rotatable: false, scalable: false,
       })
     },
 
     closeCropModal() {
       if (this.cropper) { this.cropper.destroy(); this.cropper = null }
       this.cropModal = null
+      this.cropModalSrc = null
       this.isCropping = false
     },
 
@@ -321,21 +330,44 @@ export default {
       this.isCropping = true
       try {
         const canvas = this.cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, imageSmoothingQuality: 'high' })
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85)
-        const result = await uploadPhoto({
-          countryId: this.country.id,
-          citySlug: this.citySlug,
-          dataUrl,
-        })
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85))
+        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob })
         if (result?.src) {
-          this.cropModal.croppedSrc = result.src
-          this.cropModal.crop = true
+          const idx = this.media.findIndex(m => m.id === this.cropModal.id)
+          if (idx >= 0) {
+            if (this.cropModal.type === 'video') {
+              this.media[idx].thumbnailSrc = result.src
+            } else {
+              this.media[idx].croppedSrc = result.src
+              this.media[idx].crop = true
+            }
+          }
         }
       } catch (e) {
         this.saveError = e.message || 'Error al guardar el recorte'
       }
       this.isCropping = false
       this.closeCropModal()
+    },
+
+    captureVideoFrame(src) {
+      return new Promise((resolve, reject) => {
+        const video = document.createElement('video')
+        video.muted = true
+        video.playsInline = true
+        video.onloadeddata = () => {
+          try {
+            const canvas = document.createElement('canvas')
+            canvas.width = video.videoWidth || 1280
+            canvas.height = video.videoHeight || 720
+            canvas.getContext('2d').drawImage(video, 0, 0)
+            resolve(canvas.toDataURL('image/jpeg', 0.85))
+          } catch (e) { reject(e) }
+        }
+        video.onerror = () => reject(new Error('No se pudo cargar el vídeo'))
+        video.src = src
+        video.load()
+      })
     },
 
     async loadData() {
@@ -346,15 +378,29 @@ export default {
       this.cityData = city
       this.media = (city?.media || []).map(item => {
         if (item.type === 'photo') {
-          return {
-            ...item,
-            size: item.size || 'medium',
-            crop: item.crop !== undefined ? item.crop : true,
-            croppedSrc: item.croppedSrc || null,
-          }
+          return { ...item, size: item.size || 'medium', crop: item.crop !== undefined ? item.crop : true, croppedSrc: item.croppedSrc || null }
+        }
+        if (item.type === 'video') {
+          return { ...item, size: item.size || 'medium', thumbnailSrc: item.thumbnailSrc || null }
         }
         return item
       })
+
+      // Merge local OneDrive media — new files not yet in db appear at the end
+      try {
+        const files = await fetch(`/api/local-media/${this.citySlug}`).then(r => r.ok ? r.json() : [])
+        const existingSrcs = new Set(this.media.map(m => m.src))
+        for (const f of files) {
+          if (existingSrcs.has(f.src)) continue
+          const id = 'local_' + f.src.replace(/[^a-z0-9]/gi, '_')
+          if (f.type === 'photo') {
+            this.media.push({ id, type: 'photo', src: f.src, size: 'medium', crop: false, croppedSrc: null, caption: '' })
+          } else {
+            this.media.push({ id, type: 'video', src: f.src, size: 'medium', thumbnailSrc: null, caption: '' })
+          }
+        }
+      } catch { /* local media not available in production */ }
+
       this.loading = false
     },
 
@@ -384,29 +430,44 @@ export default {
       const all = Array.from(event.target.files)
       event.target.value = ''
       this.isUploading = true
-      const files = []
+      const imageFiles = []
+      const videoFiles = []
       for (const f of all) {
         if (/\.heic$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif') {
           try {
             const blob = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.9 })
-            files.push(new File([blob], f.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' }))
+            imageFiles.push(new File([blob], f.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' }))
           } catch {
             this.saveError = `No se pudo convertir ${f.name}`
           }
         } else if (f.type.startsWith('image/')) {
-          files.push(f)
+          imageFiles.push(f)
+        } else if (f.type.startsWith('video/')) {
+          videoFiles.push(f)
         }
       }
-      if (!files.length) { this.isUploading = false; return }
-      for (let i = 0; i < files.length; i++) {
-        this.uploadProgress = `${i + 1} / ${files.length}`
-        const dataUrl = await this.compressImage(files[i])
-        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, dataUrl })
+      const total = imageFiles.length + videoFiles.length
+      if (!total) { this.isUploading = false; return }
+      let done = 0
+      for (const f of imageFiles) {
+        this.uploadProgress = `${++done} / ${total}`
+        const blob = await this.compressImage(f)
+        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob })
         if (result?.src) {
           this.media.push({
             id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
             type: 'photo', size: 'medium', crop: true, croppedSrc: null,
             src: result.src, caption: '',
+          })
+        }
+      }
+      for (const f of videoFiles) {
+        this.uploadProgress = `${++done} / ${total}`
+        const result = await uploadVideo({ countryId: this.country.id, citySlug: this.citySlug, file: f })
+        if (result?.src) {
+          this.media.push({
+            id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+            type: 'video', src: result.src, size: 'medium', thumbnailSrc: null, caption: '',
           })
         }
       }
@@ -427,20 +488,12 @@ export default {
             const canvas = document.createElement('canvas')
             canvas.width = w; canvas.height = h
             canvas.getContext('2d').drawImage(img, 0, 0, w, h)
-            resolve(canvas.toDataURL('image/jpeg', 0.82))
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.82)
           }
           img.src = e.target.result
         }
         reader.readAsDataURL(file)
       })
-    },
-
-    addVideo() {
-      const name = this.videoFilename.trim()
-      if (!name) return
-      this.media.push({ id: `${Date.now()}_${Math.random().toString(36).slice(2)}`, type: 'video', src: `/videos/${name}`, caption: '' })
-      this.videoFilename = ''
-      this.showVideoInput = false
     },
 
     addText() {
@@ -510,19 +563,6 @@ export default {
 .toolbar-btn--amber { background: rgba(245,158,11,0.13); border-color: rgba(245,158,11,0.34); color: #fcd34d; }
 .toolbar-btn--amber:hover:not(:disabled) { background: rgba(245,158,11,0.24); border-color: rgba(245,158,11,0.58); color: #fef3c7; }
 
-/* ── Video row ───────────────────────────────────────── */
-.video-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; }
-.video-label { font-size: 0.82rem; color: rgba(255,255,255,0.42); }
-.video-label code { background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px; font-size: 0.78rem; }
-.video-inputs { display: flex; gap: 8px; align-items: center; }
-.video-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.88rem; font-family: 'Space Grotesk', Arial, sans-serif; outline: none; }
-.video-input:focus { border-color: rgba(168,85,247,0.4); }
-.video-add-btn { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35); color: #c084fc; border-radius: 8px; padding: 8px 16px; font-size: 0.84rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; }
-.video-add-btn:hover:not(:disabled) { background: rgba(168,85,247,0.26); }
-.video-add-btn:disabled { opacity: 0.38; cursor: not-allowed; }
-.video-cancel { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 1rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
-.video-cancel:hover { color: rgba(255,255,255,0.65); }
-
 /* ── Upload indicator ────────────────────────────────── */
 .upload-indicator { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 14px; background: rgba(232,121,160,0.07); border: 1px solid rgba(232,121,160,0.18); border-radius: 10px; font-size: 0.84rem; color: rgba(232,121,160,0.8); }
 .upload-spinner { width: 16px; height: 16px; border: 2px solid rgba(232,121,160,0.28); border-top-color: #e879a0; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
@@ -568,6 +608,7 @@ export default {
 .card-preview { width: 100%; background: rgba(0,0,0,0.15); overflow: hidden; }
 .card-preview--photo { position: relative; cursor: pointer; }
 .card-img { width: 100%; height: 150px; object-fit: cover; display: block; transition: filter 0.2s; }
+.card-video-preview { width: 100%; height: 150px; object-fit: cover; display: block; }
 .card-preview--photo:hover .card-img { filter: brightness(0.65); }
 .crop-edit-overlay {
   position: absolute; inset: 0; display: flex; flex-direction: column;
@@ -578,8 +619,6 @@ export default {
 }
 .crop-edit-overlay svg { width: 22px; height: 22px; }
 .card-preview--photo:hover .crop-edit-overlay { opacity: 1; }
-.card-video-wrap { width: 100%; }
-.card-video { width: 100%; max-height: 150px; display: block; background: #000; }
 
 /* ── Card controls ───────────────────────────────────── */
 .card-controls-row { display: flex; background: rgba(0,0,0,0.14); border-top: 1px solid rgba(255,255,255,0.04); }

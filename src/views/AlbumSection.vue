@@ -25,14 +25,19 @@
           </div>
 
           <div v-else
-            class="album-video"
-            :style="{ left: p.x + 'px', top: p.y + 'px', width: p.w + 'px' }"
+            class="album-photo"
+            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg' }"
             @click="openLightbox(p.item)">
-            <video :src="p.item.src" class="album-video-el" preload="metadata" />
-            <div class="album-video-play">
-              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <div class="album-video-thumb-wrap" :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }">
+              <img v-if="p.item.thumbnailSrc" :src="p.item.thumbnailSrc" class="album-photo-img"
+                :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
+              <video v-else :src="p.item.src" class="album-photo-img album-video-preview"
+                :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" preload="metadata" muted />
+              <div class="album-video-badge">
+                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
             </div>
-            <p v-if="p.item.caption" class="album-video-caption">{{ p.item.caption }}</p>
+            <p v-if="p.item.caption" class="album-photo-caption">{{ p.item.caption }}</p>
           </div>
 
         </template>
@@ -68,6 +73,7 @@ export default {
       layout: { placed: [], totalH: 0 },
       lightboxItem: null,
       aspectRatios: {},
+      thumbSrcCache: {},
       containerWidth: 0,
     }
   },
@@ -113,19 +119,26 @@ export default {
     },
 
     _loadMissingRatios(items) {
-      const toLoad = items.filter(
-        item => item.type === 'photo' && this.aspectRatios[item.id] === undefined
-      )
+      const toLoad = items.filter(item => {
+        if (item.type === 'photo') return this.aspectRatios[item.id] === undefined
+        if (item.type === 'video' && item.thumbnailSrc) {
+          // reload if not cached or if the cached src doesn't match current thumbnailSrc
+          return this.aspectRatios[item.id] === undefined ||
+            this.thumbSrcCache[item.id] !== item.thumbnailSrc
+        }
+        return false
+      })
       if (!toLoad.length) return
 
       const promises = toLoad.map(item => new Promise(resolve => {
         const img = new Image()
         img.onload = () => {
           this.aspectRatios[item.id] = img.naturalWidth / img.naturalHeight
+          if (item.type === 'video') this.thumbSrcCache[item.id] = item.thumbnailSrc
           resolve()
         }
         img.onerror = () => resolve()
-        img.src = this.imgSrc(item)
+        img.src = item.type === 'video' ? item.thumbnailSrc : this.imgSrc(item)
       }))
 
       // One single recompute after ALL missing ratios are loaded
@@ -155,8 +168,10 @@ export default {
           return { item, w: imgW + FPH, h: imgH + FPV, imgW, imgH }
         }
         if (item.type === 'video') {
-          const h = Math.round(W * 9 / 16)
-          return { item, w: W, h, imgW: W, imgH: h }
+          const imgH = sizeH[item.size || 'medium']
+          const ratio = this.aspectRatios[item.id] ?? (16 / 9)
+          const imgW = Math.min(Math.round(ratio * imgH), W - FPH)
+          return { item, w: imgW + FPH, h: imgH + FPV, imgW, imgH }
         }
         const vw = window.innerWidth
         const textW = Math.min(
@@ -288,12 +303,10 @@ export default {
 .album-postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.07); }
 .album-postit:hover { transform: rotate(0deg) scale(1.04) !important; box-shadow: 5px 10px 32px rgba(0,0,0,0.24); z-index: 20; }
 
-.album-video { position: absolute; background: #111; border-radius: 6px; overflow: hidden; box-shadow: 2px 5px 20px rgba(0,0,0,0.28); cursor: zoom-in; }
-.album-video-el { width: 100%; aspect-ratio: 16/9; display: block; }
-.album-video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); transition: background 0.2s; }
-.album-video:hover .album-video-play { background: rgba(0,0,0,0.18); }
-.album-video-play svg { width: 36px; height: 36px; color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-.album-video-caption { margin: 0; padding: 6px 10px 8px; background: #111; text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); font-style: italic; font-family: Georgia, serif; }
+.album-video-thumb-wrap { position: relative; display: block; overflow: hidden; }
+.album-video-preview { object-fit: cover; display: block; }
+.album-video-badge { position: absolute; bottom: 7px; right: 7px; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.58); display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.album-video-badge svg { width: 13px; height: 13px; color: #fff; margin-left: 2px; }
 
 .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: 24px; animation: fadeIn 0.18s ease; }
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }

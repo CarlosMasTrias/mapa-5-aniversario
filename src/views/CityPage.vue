@@ -105,8 +105,7 @@ export default {
       for (const item of data) {
         const sz = item.size || 'medium'
         let iw
-        if (item.type === 'photo') iw = { small: 1, medium: 2, large: 3 }[sz]
-        else if (item.type === 'video') iw = 3
+        if (item.type === 'photo' || item.type === 'video') iw = { small: 1, medium: 2, large: 3 }[sz]
         else iw = w === 0 ? 3 : Math.max(1, 3 - w)
 
         if (w + iw > 3 && row.length) {
@@ -128,17 +127,31 @@ export default {
       const city = cities.find(c => toSlug(c.name) === this.citySlug) || null
       this.cityData = city
       this.description = city?.description || ''
-      this.media = (city?.media || []).map(item => {
+      const dbMedia = (city?.media || []).map(item => {
         if (item.type === 'photo') {
-          return {
-            ...item,
-            size: item.size || 'medium',
-            crop: item.crop !== undefined ? item.crop : true,
-            croppedSrc: item.croppedSrc || null,
-          }
+          return { ...item, size: item.size || 'medium', crop: item.crop !== undefined ? item.crop : true, croppedSrc: item.croppedSrc || null }
         }
         return item
       })
+
+      let localMedia = []
+      try {
+        const files = await fetch(`/api/local-media/${this.citySlug}`).then(r => r.ok ? r.json() : [])
+        const dbSrcs = new Set(dbMedia.map(m => m.src))
+        for (const f of files) {
+          if (dbSrcs.has(f.src)) continue
+          localMedia.push({
+            id: 'local_' + f.src.replace(/[^a-z0-9]/gi, '_'),
+            type: f.type,
+            src: f.src,
+            size: 'medium',
+            ...(f.type === 'photo' ? { crop: false, croppedSrc: null } : { thumbnailSrc: null }),
+            caption: '',
+          })
+        }
+      } catch { /* not available in production */ }
+
+      this.media = [...dbMedia, ...localMedia]
       this.loading = false
       await this.$nextTick()
       if (this.$refs.albumSection) {
@@ -194,9 +207,9 @@ export default {
 
 /* ── Edit bar ────────────────────────────────────────── */
 .edit-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-.edit-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); border-radius: 10px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.18s; }
+.edit-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(232,121,160,0.15); border: 1px solid rgba(232,121,160,0.42); color: #f9a8d4; border-radius: 10px; padding: 8px 18px; font-size: 0.82rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.18s; }
 .edit-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-.edit-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.2); }
+.edit-btn:hover { background: rgba(232,121,160,0.28); color: #fff; border-color: rgba(232,121,160,0.68); }
 
 /* ── Empty state ─────────────────────────────────────── */
 .media-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px; border: 1px dashed rgba(168,85,247,0.18); border-radius: 18px; gap: 10px; text-align: center; margin-top: 8px; }
