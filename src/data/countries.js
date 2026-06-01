@@ -1,6 +1,6 @@
 // Añade aquí los códigos ISO de los países visitados
 export const VISITED_COUNTRIES = [
-  'US', 'ES', 'CR', 'MX', 'PT', 'FR', 'GB', 'IE', 'IT', 'SK', 'CH', 'AT', 'SE', 'FI', 'VA', 'AD',
+  'US', 'ES', 'CR', 'MX', 'PT', 'FR', 'GB', 'IE', 'IT', 'SK', 'CH', 'AT', 'SE', 'FI', 'VA', 'AD', 'HU',
 ]
 
 export const COUNTRY_NAMES = {

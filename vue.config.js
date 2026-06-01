@@ -30,6 +30,8 @@ const CITY_SLUG_TO_FOLDER = {
   'bratislava':    'Bratislava',
   'estocolmo':     'Estocolmo',
   'lulea':         'Lulea',
+  'budapest':      'Budapest',
+  'ciudad-del-vaticano': 'Ciudad del Vaticano',
 }
 const PHOTO_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp'])
 const VIDEO_EXTS = new Set(['.mp4', '.mov', '.avi', '.m4v', '.mkv'])
@@ -95,6 +97,12 @@ function writeDb(data) {
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    // Evita que webpack-dev-server recargue la página cuando se escribe db.json
+    static: {
+      watch: {
+        ignored: [path.join(__dirname, 'public', 'db.json')],
+      },
+    },
     setupMiddlewares(middlewares, devServer) {
       const app = devServer.app
 

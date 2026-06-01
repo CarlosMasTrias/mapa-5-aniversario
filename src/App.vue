@@ -3,7 +3,7 @@
     <header class="app-header">
       <div class="header-brand" @click="$router.push('/')" style="cursor:pointer">
         <span class="brand-icon">❤️</span>
-        <h1 class="app-title">MAPA DE PAISES GORDITOS</h1>
+        <h1 class="app-title">MAPA DE PAISES <span class="secret-key" @click.stop="revealHungary">G</span>ORDITO<span class="secret-key" @click.stop="hideHungary">S</span></h1>
       </div>
     </header>
     <main>
@@ -13,8 +13,18 @@
 </template>
 
 <script>
+import { secretStore } from '@/store/secret.js'
+
 export default {
   name: 'App',
+  methods: {
+    revealHungary() {
+      secretStore.hungaryRevealed = true;
+    },
+    hideHungary() {
+      secretStore.hungaryRevealed = false;
+    },
+  },
 }
 </script>
 
@@ -83,5 +93,10 @@ main {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.secret-key {
+  cursor: inherit;
+  user-select: none;
 }
 </style>

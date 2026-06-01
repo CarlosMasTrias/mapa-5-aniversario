@@ -301,6 +301,154 @@
           "media": []
         }
       ]
+    },
+    "HU": {
+      "cities": [
+        {
+          "name": "Budapest",
+          "description": "",
+          "media": [
+            {
+              "id": "local__local_media_budapest_vuelos_png",
+              "type": "photo",
+              "src": "/local-media/budapest/vuelos.png",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            }
+          ]
+        }
+      ]
+    },
+    "VA": {
+      "cities": [
+        {
+          "name": "Ciudad del Vaticano",
+          "description": "",
+          "media": [
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3478_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3478.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3480_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3480.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3488_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3488.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3492_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3492.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3495_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3495.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3504_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3504.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3508_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3508.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3512_MOV",
+              "type": "video",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3512.MOV",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3515_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3515.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3521_MOV",
+              "type": "video",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3521.MOV",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3529_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3529.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3589_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3589.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            }
+          ]
+        }
+      ]
     }
-  }
+  },
+  "visitedCountries": [
+    "HU"
+  ],
+  "removedCountries": [
+    "SA",
+    "RU",
+    "AF",
+    "RO",
+    "SD",
+    "LY",
+    "DE",
+    "CZ",
+    "BR",
+    "PY"
+  ]
 }

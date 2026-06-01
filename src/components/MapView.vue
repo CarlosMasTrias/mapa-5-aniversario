@@ -1,10 +1,23 @@
 <template>
   <div class="map-wrapper">
     <div id="chartdiv"></div>
+
+    <!-- Popup: marcar país como visitado -->
+    <div v-if="popup.visible" class="visit-popup-overlay" @click.self="closePopup">
+      <div class="visit-popup">
+        <p class="popup-country-name">{{ popup.countryName }}</p>
+        <p class="popup-question">¿Has visitado este país?</p>
+        <div class="popup-buttons">
+          <button class="popup-btn popup-btn-no" @click="closePopup">No</button>
+          <button class="popup-btn popup-btn-yes" @click="confirmVisit">Sí</button>
+        </div>
+      </div>
+    </div>
+
     <div class="country-counter">
       <div class="counter-icon">✈️</div>
       <div class="counter-nums">
-        <span class="visited-num">{{ countries.length }}</span>
+        <span class="visited-num">{{ displayCountries.length }}</span>
         <span class="slash">/</span>
         <span class="total-num">195</span>
       </div>
@@ -16,7 +29,7 @@
         <span class="progress-text">{{ progressPct }}%</span>
       </div>
     </div>
-    <FlagPanel :countries="countries" />
+    <FlagPanel :countries="displayCountries" />
   </div>
 </template>
 
@@ -28,6 +41,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import FlagPanel from './FlagPanel.vue';
 import { COUNTRY_NAMES } from '@/data/countries.js';
 import { toSlug } from '@/utils/slug.js';
+import { secretStore } from '@/store/secret.js';
 
 // Países no visitados: gris apagado para que parezcan "bloqueados"
 const LOCKED_FILL   = 0x37474F;
@@ -53,6 +67,7 @@ const COUNTRY_COLORS = {
   FI: 0xFDD835, // Yellow
   VA: 0xFF9800, // Orange
   AD: 0x00BCD4, // Cyan
+  HU: 0x43A047, // Green 600 — secreto
 };
 
 const COUNTRY_HOVER_COLORS = {
@@ -72,7 +87,34 @@ const COUNTRY_HOVER_COLORS = {
   FI: 0xF57F17,
   VA: 0xE65100,
   AD: 0x006064,
+  HU: 0x2E7D32, // Green 800
 };
+
+// Paleta de colores para países desbloqueados que no tienen color asignado
+const DEFAULT_COLOR_POOL = [
+  0x26A69A, 0x66BB6A, 0xFF7043, 0xAB47BC, 0x42A5F5,
+  0xEC407A, 0xFFA726, 0x26C6DA, 0xD4E157, 0x8D6E63,
+  0x78909C, 0xEF5350, 0x29B6F6, 0x9CCC65, 0xFFCA28,
+  0x5C6BC0, 0xF06292, 0x4DB6AC, 0xFFB74D, 0x80CBC4,
+];
+const DEFAULT_HOVER_POOL = [
+  0x00695C, 0x2E7D32, 0xBF360C, 0x6A1B9A, 0x0D47A1,
+  0x880E4F, 0xE65100, 0x006064, 0x827717, 0x4E342E,
+  0x37474F, 0xC62828, 0x01579B, 0x33691E, 0xFF8F00,
+  0x283593, 0xAD1457, 0x00695C, 0xEF6C00, 0x004D40,
+];
+
+function hashId(id) {
+  return id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+}
+function getVisitedColor(id) {
+  if (COUNTRY_COLORS[id] !== undefined) return COUNTRY_COLORS[id];
+  return DEFAULT_COLOR_POOL[hashId(id) % DEFAULT_COLOR_POOL.length];
+}
+function getHoverColor(id) {
+  if (COUNTRY_HOVER_COLORS[id] !== undefined) return COUNTRY_HOVER_COLORS[id];
+  return DEFAULT_HOVER_POOL[hashId(id) % DEFAULT_HOVER_POOL.length];
+}
 
 const MICRO_STATES_GEOJSON = {
   type: 'FeatureCollection',
@@ -108,26 +150,55 @@ export default {
       required: true,
     },
   },
+  emits: ['country-unlocked'],
   data() {
     return {
       root: null,
       polygonSeries: null,
       tinySeries: null,
+      popup: { visible: false, countryId: null, countryName: null },
     };
   },
   computed: {
+    hungaryRevealed() {
+      return secretStore.hungaryRevealed;
+    },
+    displayCountries() {
+      if (!secretStore.hungaryRevealed) {
+        return this.countries.filter(id => id !== 'HU');
+      }
+      return this.countries;
+    },
     progressPct() {
-      return Math.round(this.countries.length / 195 * 1000) / 10;
+      return Math.round(this.displayCountries.length / 195 * 1000) / 10;
     },
   },
   watch: {
-    countries(newVal) {
-      if (this.polygonSeries) {
-        this.polygonSeries.data.setAll(this.buildData(newVal));
-      }
-      if (this.tinySeries) {
-        this.tinySeries.data.setAll(this.buildTinyData(newVal));
-      }
+    countries: {
+      deep: true,
+      handler(newVal) {
+        const visitedSet = new Set(newVal);
+        const applyFills = (series) => {
+          if (!series) return;
+          series.mapPolygons.each(polygon => {
+            const ctx = polygon.dataItem?.dataContext;
+            if (!ctx) return;
+            const id = ctx.id;
+            const isVisited = visitedSet.has(id);
+            ctx.visited = isVisited;
+            if (id === 'HU' && !secretStore.hungaryRevealed) {
+              polygon.set('fill', am5.color(LOCKED_FILL));
+            } else {
+              polygon.set('fill', am5.color(isVisited ? getVisitedColor(id) : LOCKED_FILL));
+            }
+          });
+        };
+        applyFills(this.polygonSeries);
+        applyFills(this.tinySeries);
+      },
+    },
+    hungaryRevealed(revealed) {
+      this.updateHungaryVisuals(revealed);
     },
   },
   mounted() {
@@ -165,25 +236,32 @@ export default {
 
     polygonSeries.mapPolygons.template.events.on("pointerover", (ev) => {
       const ctx = ev.target.dataItem?.dataContext;
-      const color = ctx?.visited
-        ? (COUNTRY_HOVER_COLORS[ctx.id] ?? LOCKED_HOVER)
-        : LOCKED_HOVER;
+      if (ctx?.id === 'HU' && !secretStore.hungaryRevealed) {
+        ev.target.set("fill", am5.color(LOCKED_HOVER));
+        return;
+      }
+      const color = ctx?.visited ? getHoverColor(ctx.id) : LOCKED_HOVER;
       ev.target.set("fill", am5.color(color));
     });
 
     polygonSeries.mapPolygons.template.events.on("pointerout", (ev) => {
       const ctx = ev.target.dataItem?.dataContext;
-      const color = ctx?.visited
-        ? (COUNTRY_COLORS[ctx.id] ?? LOCKED_FILL)
-        : LOCKED_FILL;
+      if (ctx?.id === 'HU' && !secretStore.hungaryRevealed) {
+        ev.target.set("fill", am5.color(LOCKED_FILL));
+        return;
+      }
+      const color = ctx?.visited ? getVisitedColor(ctx.id) : LOCKED_FILL;
       ev.target.set("fill", am5.color(color));
     });
 
     polygonSeries.mapPolygons.template.events.on("click", (event) => {
       const ctx = event.target.dataItem.dataContext;
+      if (ctx.id === 'HU' && !secretStore.hungaryRevealed) return;
+      const name = COUNTRY_NAMES[ctx.id] || ctx.id;
       if (ctx.visited) {
-        const name = COUNTRY_NAMES[ctx.id] || ctx.id;
         this.$router.push('/' + toSlug(name));
+      } else {
+        this.showPopup(ctx.id, name);
       }
     });
 
@@ -226,25 +304,32 @@ export default {
 
     tinySeries.mapPolygons.template.events.on("pointerover", (ev) => {
       const ctx = ev.target.dataItem?.dataContext;
-      const color = ctx?.visited
-        ? (COUNTRY_HOVER_COLORS[ctx.id] ?? LOCKED_HOVER)
-        : LOCKED_HOVER;
+      if (ctx?.id === 'HU' && !secretStore.hungaryRevealed) {
+        ev.target.set("fill", am5.color(LOCKED_HOVER));
+        return;
+      }
+      const color = ctx?.visited ? getHoverColor(ctx.id) : LOCKED_HOVER;
       ev.target.set("fill", am5.color(color));
     });
 
     tinySeries.mapPolygons.template.events.on("pointerout", (ev) => {
       const ctx = ev.target.dataItem?.dataContext;
-      const color = ctx?.visited
-        ? (COUNTRY_COLORS[ctx.id] ?? LOCKED_FILL)
-        : LOCKED_FILL;
+      if (ctx?.id === 'HU' && !secretStore.hungaryRevealed) {
+        ev.target.set("fill", am5.color(LOCKED_FILL));
+        return;
+      }
+      const color = ctx?.visited ? getVisitedColor(ctx.id) : LOCKED_FILL;
       ev.target.set("fill", am5.color(color));
     });
 
     tinySeries.mapPolygons.template.events.on("click", (event) => {
       const ctx = event.target.dataItem.dataContext;
+      if (ctx.id === 'HU' && !secretStore.hungaryRevealed) return;
+      const name = COUNTRY_NAMES[ctx.id] || ctx.id;
       if (ctx.visited) {
-        const name = COUNTRY_NAMES[ctx.id] || ctx.id;
         this.$router.push('/' + toSlug(name));
+      } else {
+        this.showPopup(ctx.id, name);
       }
     });
 
@@ -255,6 +340,9 @@ export default {
     this.root = root;
     this.polygonSeries = polygonSeries;
     this.tinySeries = tinySeries;
+
+    // Aplicar estado inicial de Hungría
+    this.updateHungaryVisuals(secretStore.hungaryRevealed);
   },
   beforeUnmount() {
     if (this.root) {
@@ -266,7 +354,7 @@ export default {
       return countries.map(id => ({
         id,
         visited: true,
-        polygonSettings: { fill: am5.color(COUNTRY_COLORS[id] ?? LOCKED_FILL) },
+        polygonSettings: { fill: am5.color(getVisitedColor(id)) },
       }));
     },
     buildTinyData(countries) {
@@ -276,8 +364,29 @@ export default {
         .map(id => ({
           id,
           visited: true,
-          polygonSettings: { fill: am5.color(COUNTRY_COLORS[id] ?? LOCKED_FILL) },
+          polygonSettings: { fill: am5.color(getVisitedColor(id)) },
         }));
+    },
+    updateHungaryVisuals(revealed) {
+      const fill = am5.color(revealed ? getVisitedColor('HU') : LOCKED_FILL);
+      for (const series of [this.polygonSeries, this.tinySeries]) {
+        if (!series) continue;
+        series.mapPolygons.each(polygon => {
+          if (polygon.dataItem?.dataContext?.id === 'HU') {
+            polygon.set('fill', fill);
+          }
+        });
+      }
+    },
+    showPopup(id, name) {
+      this.popup = { visible: true, countryId: id, countryName: name };
+    },
+    closePopup() {
+      this.popup = { visible: false, countryId: null, countryName: null };
+    },
+    confirmVisit() {
+      this.$emit('country-unlocked', this.popup.countryId);
+      this.closePopup();
     },
   },
 };
@@ -387,5 +496,84 @@ export default {
   letter-spacing: 0.3px;
   min-width: 36px;
   text-align: right;
+}
+
+/* ── Popup visitar país ───────────────────────────────── */
+.visit-popup-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.visit-popup {
+  background: rgba(13, 17, 23, 0.96);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 22px;
+  padding: 36px 40px 32px;
+  text-align: center;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  max-width: 340px;
+  width: 90%;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  animation: popup-in 0.2s ease;
+}
+
+@keyframes popup-in {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.popup-country-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 6px;
+}
+
+.popup-question {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 28px;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.popup-btn {
+  padding: 12px 34px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.popup-btn:hover {
+  transform: scale(1.05);
+}
+
+.popup-btn-no {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.popup-btn-yes {
+  background: linear-gradient(135deg, #e879a0, #a855f7);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.45);
 }
 </style>
