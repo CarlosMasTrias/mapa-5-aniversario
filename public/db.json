@@ -183,8 +183,273 @@
         },
         {
           "name": "Helsinki",
-          "description": "",
-          "media": []
+          "description": "Visita a Helskinki, Finlandia el 12, y del 19 al 20 de febrero",
+          "media": [
+            {
+              "id": "1780608462563_nk6ik9kllsq",
+              "type": "separator",
+              "label": "Día 1"
+            },
+            {
+              "id": "1780597436885_m0cjme4xv4",
+              "type": "text",
+              "size": "m",
+              "content": "Un frio día de febrero llegamos a Helsinki, Finlandia. Nuestro objetivo es coger un avión para ir aun más al norte del país, pero por el momento pasaremos una noche aquí. Así que vamos a un centro comercial en busca de comida donde encontramos unas picsas y sorpresa... ¡nos regalan un helado por ser una parejita en San Valentín!"
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_2888_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_2888.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_2891_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_2891.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780608433256_o8rmb64qlqc",
+              "type": "separator",
+              "label": "Día 2"
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3351_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3351.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Gorditos en la catedral pasando frio",
+              "cropData": null
+            },
+            {
+              "id": "1780597992511_kv3jw62o9r9",
+              "type": "text",
+              "size": "m",
+              "content": "Después de una de las mejores experiencias de nuestras vidas viendo Buroras, yendo en trineo tirado por huskyes y renos, jugando en la nieve y muchas cosas más, tocaba volver a Helsinki a pasar dos días y visitar la ciudad. El plan era simple, pasear y hacer un tour gratis para que nos enseñasen todo lo posible sobre esta ciudad, el problema era que hacía un frio terrible🥶"
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3356_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3356.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3354_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3354.jpg",
+              "size": "large",
+              "crop": true,
+              "croppedSrc": "/fotos/FI/helsinki/1780606909227_48r22mftv78.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 42.90810810810818,
+                "y": 43.58918918918923,
+                "width": 2944.994594594594,
+                "height": 2494.1189189189186
+              }
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3357_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3357.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3358_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3358.jpg",
+              "size": "large",
+              "crop": true,
+              "croppedSrc": "/fotos/FI/helsinki/1780606763323_m0dajj97spi.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 38.07837837837844,
+                "y": 22.951351351351384,
+                "width": 2255.491891891892,
+                "height": 3036.8810810810814
+              }
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3359_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3359.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/FI/helsinki/1780608610421_awrrjkcs5n.jpg",
+              "caption": "Un pobre chaval en la intemperie",
+              "cropData": {
+                "x": 669.5027027027028,
+                "y": 806.4,
+                "width": 1405.751351351351,
+                "height": 1949.254054054054
+              }
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3361_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3361.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3363_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3363.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3367_JPG",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3367.JPG",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3397_JPG",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3397.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3411_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3411.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "NOCHE DE PATINAJE SOBRE HIELO!!",
+              "cropData": null
+            },
+            {
+              "id": "1780608461813_kl2nbd8z3u",
+              "type": "separator",
+              "label": "Día 3"
+            },
+            {
+              "id": "1780606787861_d0py1iglyer",
+              "type": "text",
+              "size": "s",
+              "content": "Al día siguiente fuimos a visitar las oficinas de Supercell\n"
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3416_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3416.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3420_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3420.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3423_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3423.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3426_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3426.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3430_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3430.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3437_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3437.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3438_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3438.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_helsinki_IMG_3439_jpg",
+              "type": "photo",
+              "src": "/local-media/helsinki/IMG_3439.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780608514931_dg8wwm7q1w8",
+              "type": "text",
+              "size": "s",
+              "content": "Y por la noche a cenar un delicioso menú macGordita como no podía faltar, con su rica hamburguesa de pan de centeno"
+            }
+          ]
         }
       ]
     },
@@ -301,6 +566,154 @@
           "media": []
         }
       ]
+    },
+    "HU": {
+      "cities": [
+        {
+          "name": "Budapest",
+          "description": "",
+          "media": [
+            {
+              "id": "local__local_media_budapest_vuelos_png",
+              "type": "photo",
+              "src": "/local-media/budapest/vuelos.png",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            }
+          ]
+        }
+      ]
+    },
+    "VA": {
+      "cities": [
+        {
+          "name": "Ciudad del Vaticano",
+          "description": "",
+          "media": [
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3478_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3478.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3480_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3480.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3488_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3488.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3492_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3492.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3495_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3495.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3504_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3504.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3508_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3508.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3512_MOV",
+              "type": "video",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3512.MOV",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3515_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3515.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3521_MOV",
+              "type": "video",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3521.MOV",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3529_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3529.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_ciudad_del_vaticano_IMG_3589_jpg",
+              "type": "photo",
+              "src": "/local-media/ciudad-del-vaticano/IMG_3589.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            }
+          ]
+        }
+      ]
     }
-  }
+  },
+  "visitedCountries": [
+    "HU"
+  ],
+  "removedCountries": [
+    "SA",
+    "RU",
+    "AF",
+    "RO",
+    "SD",
+    "LY",
+    "DE",
+    "CZ",
+    "BR",
+    "PY"
+  ]
 }

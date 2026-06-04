@@ -37,8 +37,8 @@
           >
             <div class="city-card-info">
               <span class="city-card-name">{{ city.name }}</span>
-              <span v-if="city.media && city.media.length > 0" class="city-badge city-badge--media">
-                {{ city.media.length }} {{ city.media.length === 1 ? 'elemento' : 'elementos' }}
+              <span v-if="cityMediaCount(city) > 0" class="city-badge city-badge--media">
+                {{ cityMediaCount(city) }} {{ cityMediaCount(city) === 1 ? 'elemento' : 'elementos' }}
               </span>
               <span v-else class="city-badge city-badge--empty">Sin contenido aún</span>
             </div>
@@ -71,6 +71,37 @@
         </button>
       </div>
     </template>
+
+    <!-- ── Danger zone ────────────────────────────────────── -->
+    <div v-if="country && !loading" class="danger-zone">
+      <button class="delete-country-btn" @click="showDeleteConfirm = true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+        </svg>
+        Eliminar este país
+      </button>
+    </div>
+
+    <!-- ── Confirmar eliminar país ─────────────────────────── -->
+    <Transition name="modal">
+      <div v-if="showDeleteConfirm" class="modal-overlay" @click.self="showDeleteConfirm = false">
+        <div class="modal modal--danger">
+          <div class="modal-header">
+            <h3 class="modal-title">¿Eliminar {{ country?.name }}?</h3>
+          </div>
+          <p class="danger-msg">
+            Se eliminarán <strong>todas las ciudades y su contenido</strong> de este país.
+            Esta acción no se puede deshacer.
+          </p>
+          <div class="danger-actions">
+            <button class="modal-cancel-btn" @click="showDeleteConfirm = false">Cancelar</button>
+            <button class="modal-delete-btn" @click="deleteCountry" :disabled="deleting">
+              {{ deleting ? 'Eliminando...' : 'Sí, eliminar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- ── City selector modal ──────────────────────────── -->
     <Transition name="modal">
@@ -153,6 +184,8 @@ export default {
       showSelector: false,
       citySearch: '',
       customCity: '',
+      showDeleteConfirm: false,
+      deleting: false,
     }
   },
   computed: {
@@ -188,8 +221,22 @@ export default {
     async loadData() {
       this.loading = true
       this.db = await loadDb()
-      this.cities = this.db.countries?.[this.country.id]?.cities || []
+      const rawCities = this.db.countries?.[this.country.id]?.cities || []
+      this.cities = await Promise.all(rawCities.map(async city => {
+        if (city.media?.length > 0) return city
+        try {
+          const slug = toSlug(city.name)
+          const locals = await fetch(`/api/local-media/${slug}`).then(r => r.ok ? r.json() : [])
+          return locals.length ? { ...city, _localCount: locals.length } : city
+        } catch {
+          return city
+        }
+      }))
       this.loading = false
+    },
+
+    cityMediaCount(city) {
+      return city.media?.length || city._localCount || 0
     },
     async persist() {
       this.saving = true
@@ -234,6 +281,28 @@ export default {
     },
     goToCity(city) {
       this.$router.push(`/${this.countrySlug}/${toSlug(city.name)}`)
+    },
+    async deleteCountry() {
+      if (!this.country) return
+      this.deleting = true
+      const db = this.db || await loadDb()
+      // Borrar datos del país
+      if (db.countries?.[this.country.id]) {
+        delete db.countries[this.country.id]
+      }
+      // Quitar de visitedCountries (países añadidos vía popup)
+      if (db.visitedCountries) {
+        db.visitedCountries = db.visitedCountries.filter(id => id !== this.country.id)
+      }
+      // Añadir a removedCountries para que no reaparezca de la lista base
+      if (!db.removedCountries) db.removedCountries = []
+      if (!db.removedCountries.includes(this.country.id)) {
+        db.removedCountries.push(this.country.id)
+      }
+      await saveDb(db)
+      this.deleting = false
+      this.showDeleteConfirm = false
+      this.$router.push('/')
     },
   },
 }
@@ -424,4 +493,80 @@ export default {
 
 .modal-enter-active, .modal-leave-active { transition: opacity 0.2s ease; }
 .modal-enter-from, .modal-leave-to { opacity: 0; }
+
+/* ── Danger zone ──────────────────────────────────────── */
+.danger-zone {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.delete-country-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.22);
+  color: rgba(248, 113, 113, 0.55);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.delete-country-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.delete-country-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #f87171;
+}
+
+/* ── Delete confirm modal ─────────────────────────────── */
+.modal--danger { max-width: 420px; }
+
+.danger-msg {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin: 0;
+}
+.danger-msg strong { color: rgba(255, 255, 255, 0.85); font-weight: 600; }
+
+.danger-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.modal-cancel-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  padding: 9px 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  transition: background 0.15s;
+}
+.modal-cancel-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+.modal-delete-btn {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  border-radius: 10px;
+  padding: 9px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+}
+.modal-delete-btn:hover:not(:disabled) { background: rgba(248, 113, 113, 0.28); border-color: rgba(248, 113, 113, 0.65); }
+.modal-delete-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 </style>

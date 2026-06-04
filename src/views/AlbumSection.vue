@@ -13,7 +13,7 @@
             class="album-photo"
             :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg' }"
             @click="openLightbox(p.item)">
-            <img :src="imgSrc(p.item)" class="album-photo-img"
+            <img :src="imgSrc(p.item)" class="album-photo-img" loading="lazy"
               :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
             <p v-if="p.item.caption" class="album-photo-caption">{{ p.item.caption }}</p>
           </div>
@@ -24,12 +24,20 @@
             {{ p.item.content }}
           </div>
 
+          <div v-else-if="p.item.type === 'separator'"
+            class="album-separator"
+            :style="{ left: p.x + 'px', top: p.y + 'px', width: p.w + 'px' }">
+            <div class="album-sep-line"></div>
+            <span v-if="p.item.label" class="album-sep-label">{{ p.item.label }}</span>
+            <div class="album-sep-line"></div>
+          </div>
+
           <div v-else
             class="album-photo"
             :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg' }"
             @click="openLightbox(p.item)">
             <div class="album-video-thumb-wrap" :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }">
-              <img v-if="p.item.thumbnailSrc" :src="p.item.thumbnailSrc" class="album-photo-img"
+              <img v-if="p.item.thumbnailSrc" :src="p.item.thumbnailSrc" class="album-photo-img" loading="lazy"
                 :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
               <video v-else :src="p.item.src" class="album-photo-img album-video-preview"
                 :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" preload="metadata" muted />
@@ -74,6 +82,7 @@ export default {
       lightboxItem: null,
       aspectRatios: {},
       thumbSrcCache: {},
+      croppedSrcCache: {},
       containerWidth: 0,
     }
   },
@@ -120,9 +129,12 @@ export default {
 
     _loadMissingRatios(items) {
       const toLoad = items.filter(item => {
-        if (item.type === 'photo') return this.aspectRatios[item.id] === undefined
+        if (item.type === 'photo') {
+          const effectiveSrc = this.imgSrc(item)
+          return this.aspectRatios[item.id] === undefined ||
+            this.croppedSrcCache[item.id] !== effectiveSrc
+        }
         if (item.type === 'video' && item.thumbnailSrc) {
-          // reload if not cached or if the cached src doesn't match current thumbnailSrc
           return this.aspectRatios[item.id] === undefined ||
             this.thumbSrcCache[item.id] !== item.thumbnailSrc
         }
@@ -135,6 +147,7 @@ export default {
         img.onload = () => {
           this.aspectRatios[item.id] = img.naturalWidth / img.naturalHeight
           if (item.type === 'video') this.thumbSrcCache[item.id] = item.thumbnailSrc
+          if (item.type === 'photo') this.croppedSrcCache[item.id] = this.imgSrc(item)
           resolve()
         }
         img.onerror = () => resolve()
@@ -159,6 +172,7 @@ export default {
       }
 
       const items = rows.flat().map(c => c.item)
+      const vw = window.innerWidth
 
       const dims = items.map(item => {
         if (item.type === 'photo') {
@@ -173,7 +187,9 @@ export default {
           const imgW = Math.min(Math.round(ratio * imgH), W - FPH)
           return { item, w: imgW + FPH, h: imgH + FPV, imgW, imgH }
         }
-        const vw = window.innerWidth
+        if (item.type === 'separator') {
+          return { item, w: W, h: 56, imgW: W, imgH: 56 }
+        }
         const textW = Math.min(
           { l: Math.round(vw / 3), m: Math.round(vw / 4), s: Math.round(vw / 5) }[item.size || 'm'],
           W
@@ -297,9 +313,9 @@ export default {
 .album-photo:hover { transform: rotate(0deg) scale(1.05) !important; box-shadow: 4px 10px 40px rgba(0,0,0,0.26); z-index: 20; }
 .album-photo::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-1.5deg); width: 50px; height: 16px; background: rgba(255,232,100,0.68); border-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 .album-photo-img { display: block; }
-.album-photo-caption { text-align: center; padding-top: 5px; font-size: 0.7rem; color: #7a6555; font-style: italic; line-height: 1.4; font-family: Georgia, serif; }
+.album-photo-caption { text-align: center; padding-top: 5px; font-size: 0.9rem; color: #7a6555; font-style: italic; line-height: 1.4; font-family: Georgia, serif; }
 
-.album-postit { position: absolute; background: #fef08a; padding: 14px 14px 16px; box-shadow: 3px 6px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1); transform: rotate(var(--rot, 0deg)); transform-origin: center; transition: transform 0.3s ease, box-shadow 0.3s ease; z-index: 2; font-family: Georgia, 'Times New Roman', serif; font-size: 0.88rem; line-height: 1.65; color: #3d2e00; font-style: italic; white-space: pre-wrap; word-break: break-word; box-sizing: border-box; }
+.album-postit { position: absolute; background: #fef08a; padding: 14px 14px 16px; box-shadow: 3px 6px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1); transform: rotate(var(--rot, 0deg)); transform-origin: center; transition: transform 0.3s ease, box-shadow 0.3s ease; z-index: 2; font-family: Georgia, 'Times New Roman', serif; font-size: 1.1rem; line-height: 1.65; color: #3d2e00; font-style: italic; white-space: pre-wrap; word-break: break-word; box-sizing: border-box; }
 .album-postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.07); }
 .album-postit:hover { transform: rotate(0deg) scale(1.04) !important; box-shadow: 5px 10px 32px rgba(0,0,0,0.24); z-index: 20; }
 
@@ -317,4 +333,8 @@ export default {
 .lightbox-img { max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 4px; box-shadow: 0 8px 60px rgba(0,0,0,0.6); }
 .lightbox-video { max-width: 100%; max-height: 82vh; border-radius: 4px; box-shadow: 0 8px 60px rgba(0,0,0,0.6); }
 .lightbox-caption { font-size: 0.85rem; color: rgba(255,255,255,0.5); font-style: italic; text-align: center; }
+
+.album-separator { position: absolute; display: flex; align-items: center; gap: 12px; height: 56px; }
+.album-sep-line { flex: 1; height: 1px; background: rgba(122,101,85,0.3); }
+.album-sep-label { font-family: Georgia, serif; font-size: 0.78rem; font-style: italic; color: #7a6555; white-space: nowrap; letter-spacing: 1.5px; }
 </style>
