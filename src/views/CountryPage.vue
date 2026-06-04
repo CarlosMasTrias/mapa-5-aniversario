@@ -37,8 +37,8 @@
           >
             <div class="city-card-info">
               <span class="city-card-name">{{ city.name }}</span>
-              <span v-if="city.media && city.media.length > 0" class="city-badge city-badge--media">
-                {{ city.media.length }} {{ city.media.length === 1 ? 'elemento' : 'elementos' }}
+              <span v-if="cityMediaCount(city) > 0" class="city-badge city-badge--media">
+                {{ cityMediaCount(city) }} {{ cityMediaCount(city) === 1 ? 'elemento' : 'elementos' }}
               </span>
               <span v-else class="city-badge city-badge--empty">Sin contenido aún</span>
             </div>
@@ -221,8 +221,22 @@ export default {
     async loadData() {
       this.loading = true
       this.db = await loadDb()
-      this.cities = this.db.countries?.[this.country.id]?.cities || []
+      const rawCities = this.db.countries?.[this.country.id]?.cities || []
+      this.cities = await Promise.all(rawCities.map(async city => {
+        if (city.media?.length > 0) return city
+        try {
+          const slug = toSlug(city.name)
+          const locals = await fetch(`/api/local-media/${slug}`).then(r => r.ok ? r.json() : [])
+          return locals.length ? { ...city, _localCount: locals.length } : city
+        } catch {
+          return city
+        }
+      }))
       this.loading = false
+    },
+
+    cityMediaCount(city) {
+      return city.media?.length || city._localCount || 0
     },
     async persist() {
       this.saving = true

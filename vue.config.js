@@ -98,9 +98,14 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     // Evita que webpack-dev-server recargue la página cuando se escribe db.json
+    // o cuando se suben nuevas fotos/vídeos a public/fotos y public/videos
     static: {
       watch: {
-        ignored: [path.join(__dirname, 'public', 'db.json')],
+        ignored: [
+          path.join(__dirname, 'public', 'db.json'),
+          path.join(__dirname, 'public', 'fotos', '**'),
+          path.join(__dirname, 'public', 'videos', '**'),
+        ],
       },
     },
     setupMiddlewares(middlewares, devServer) {
