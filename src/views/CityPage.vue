@@ -222,6 +222,17 @@
                         @click="item.size = sz.val">{{ sz.label }}</button>
                     </div>
                   </div>
+                  <div class="card-ctrl-group">
+                    <span class="ctrl-label">Vista</span>
+                    <div class="ctrl-buttons">
+                      <button class="ctrl-btn ctrl-btn--rose"
+                        :class="{ active: item.crop !== false }"
+                        @click="item.crop = true">Recortar</button>
+                      <button class="ctrl-btn"
+                        :class="{ active: item.crop === false }"
+                        @click="item.crop = false">Completa</button>
+                    </div>
+                  </div>
                 </div>
                 <div class="card-caption-wrap">
                   <input class="card-caption" v-model="item.caption" placeholder="Descripción del vídeo..." />
@@ -394,7 +405,7 @@ export default {
           return { ...item, size: item.size || 'medium', crop: item.crop !== undefined ? item.crop : true, croppedSrc: item.croppedSrc || null, cropData: item.cropData || null }
         }
         if (item.type === 'video') {
-          return { ...item, size: item.size || 'medium', thumbnailSrc: item.thumbnailSrc || null }
+          return { ...item, size: item.size || 'medium', thumbnailSrc: item.thumbnailSrc || null, crop: item.crop !== undefined ? item.crop : true, cropData: item.cropData || null }
         }
         return item
       })
@@ -410,7 +421,7 @@ export default {
             type: f.type,
             src: f.src,
             size: 'medium',
-            ...(f.type === 'photo' ? { crop: false, croppedSrc: null } : { thumbnailSrc: null }),
+            ...(f.type === 'photo' ? { crop: false, croppedSrc: null } : { thumbnailSrc: null, crop: true, cropData: null }),
             caption: '',
           })
         }
@@ -499,6 +510,8 @@ export default {
           if (idx >= 0) {
             if (this.cropModal.type === 'video') {
               this.media[idx].thumbnailSrc = result.src
+              this.media[idx].crop = true
+              this.media[idx].cropData = this.cropper.getData()
             } else {
               this.media[idx].croppedSrc = result.src
               this.media[idx].crop = true
@@ -518,15 +531,18 @@ export default {
         const video = document.createElement('video')
         video.muted = true
         video.playsInline = true
-        video.onloadeddata = () => {
+        video.addEventListener('seeked', () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = video.videoWidth || 1280
+          canvas.height = video.videoHeight || 720
           try {
-            const canvas = document.createElement('canvas')
-            canvas.width = video.videoWidth || 1280
-            canvas.height = video.videoHeight || 720
             canvas.getContext('2d').drawImage(video, 0, 0)
             resolve(canvas.toDataURL('image/jpeg', 0.85))
           } catch (e) { reject(e) }
-        }
+        }, { once: true })
+        video.addEventListener('loadeddata', () => {
+          video.currentTime = 0.001
+        }, { once: true })
         video.onerror = () => reject(new Error('No se pudo cargar el vídeo'))
         video.src = src
         video.load()
@@ -574,7 +590,7 @@ export default {
         if (result?.src) {
           this.media.push({
             id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-            type: 'video', src: result.src, size: 'medium', thumbnailSrc: null, caption: '',
+            type: 'video', src: result.src, size: 'medium', thumbnailSrc: null, crop: true, cropData: null, caption: '',
           })
         }
       }

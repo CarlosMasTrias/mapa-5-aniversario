@@ -11,7 +11,7 @@
 
           <div v-if="p.item.type === 'photo'"
             class="album-photo"
-            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg' }"
+            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.imgW + 'px' }"
             @click="openLightbox(p.item)">
             <img :src="imgSrc(p.item)" class="album-photo-img" loading="lazy"
               :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
@@ -34,10 +34,10 @@
 
           <div v-else
             class="album-photo"
-            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg' }"
+            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.imgW + 'px' }"
             @click="openLightbox(p.item)">
             <div class="album-video-thumb-wrap" :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }">
-              <img v-if="p.item.thumbnailSrc" :src="p.item.thumbnailSrc" class="album-photo-img" loading="lazy"
+              <img v-if="p.item.thumbnailSrc && p.item.crop !== false" :src="p.item.thumbnailSrc" class="album-photo-img" loading="lazy"
                 :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
               <video v-else :src="p.item.src" class="album-photo-img album-video-preview"
                 :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" preload="metadata" muted />
@@ -134,25 +134,48 @@ export default {
           return this.aspectRatios[item.id] === undefined ||
             this.croppedSrcCache[item.id] !== effectiveSrc
         }
-        if (item.type === 'video' && item.thumbnailSrc) {
+        if (item.type === 'video') {
+          const useThumb = item.thumbnailSrc && item.crop !== false
+          if (useThumb) {
+            return this.aspectRatios[item.id] === undefined ||
+              this.thumbSrcCache[item.id] !== item.thumbnailSrc
+          }
           return this.aspectRatios[item.id] === undefined ||
-            this.thumbSrcCache[item.id] !== item.thumbnailSrc
+            this.thumbSrcCache[item.id] !== 'video-metadata'
         }
         return false
       })
       if (!toLoad.length) return
 
-      const promises = toLoad.map(item => new Promise(resolve => {
-        const img = new Image()
-        img.onload = () => {
-          this.aspectRatios[item.id] = img.naturalWidth / img.naturalHeight
-          if (item.type === 'video') this.thumbSrcCache[item.id] = item.thumbnailSrc
-          if (item.type === 'photo') this.croppedSrcCache[item.id] = this.imgSrc(item)
-          resolve()
+      const promises = toLoad.map(item => {
+        if (item.type === 'video' && !(item.thumbnailSrc && item.crop !== false)) {
+          return new Promise(resolve => {
+            const vid = document.createElement('video')
+            vid.muted = true
+            vid.preload = 'metadata'
+            vid.onloadedmetadata = () => {
+              if (vid.videoWidth && vid.videoHeight) {
+                this.aspectRatios[item.id] = vid.videoWidth / vid.videoHeight
+              }
+              this.thumbSrcCache[item.id] = 'video-metadata'
+              resolve()
+            }
+            vid.onerror = () => { this.thumbSrcCache[item.id] = 'video-metadata'; resolve() }
+            vid.src = item.src
+          })
         }
-        img.onerror = () => resolve()
-        img.src = item.type === 'video' ? item.thumbnailSrc : this.imgSrc(item)
-      }))
+        return new Promise(resolve => {
+          const img = new Image()
+          img.onload = () => {
+            this.aspectRatios[item.id] = img.naturalWidth / img.naturalHeight
+            if (item.type === 'video') this.thumbSrcCache[item.id] = item.thumbnailSrc
+            if (item.type === 'photo') this.croppedSrcCache[item.id] = this.imgSrc(item)
+            resolve()
+          }
+          img.onerror = () => resolve()
+          img.src = item.type === 'video' ? item.thumbnailSrc : this.imgSrc(item)
+        })
+      })
 
       // One single recompute after ALL missing ratios are loaded
       Promise.all(promises).then(() => {
@@ -313,7 +336,7 @@ export default {
 .album-photo:hover { transform: rotate(0deg) scale(1.05) !important; box-shadow: 4px 10px 40px rgba(0,0,0,0.26); z-index: 20; }
 .album-photo::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-1.5deg); width: 50px; height: 16px; background: rgba(255,232,100,0.68); border-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 .album-photo-img { display: block; }
-.album-photo-caption { text-align: center; padding-top: 5px; font-size: 0.9rem; color: #7a6555; font-style: italic; line-height: 1.4; font-family: Georgia, serif; }
+.album-photo-caption { text-align: center; padding-top: 5px; font-size: 0.9rem; color: #7a6555; font-style: italic; line-height: 1.4; font-family: Georgia, serif; overflow-wrap: break-word; hyphens: auto; }
 
 .album-postit { position: absolute; background: #fef08a; padding: 14px 14px 16px; box-shadow: 3px 6px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1); transform: rotate(var(--rot, 0deg)); transform-origin: center; transition: transform 0.3s ease, box-shadow 0.3s ease; z-index: 2; font-family: Georgia, 'Times New Roman', serif; font-size: 1.1rem; line-height: 1.65; color: #3d2e00; font-style: italic; white-space: pre-wrap; word-break: break-word; box-sizing: border-box; }
 .album-postit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(0,0,0,0.07); }

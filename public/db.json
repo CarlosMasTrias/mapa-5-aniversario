@@ -1777,9 +1777,11 @@
               "id": "local__local_media_dublin_IMG_8942_MOV",
               "type": "video",
               "src": "/local-media/dublin/IMG_8942.MOV",
-              "size": "small",
+              "size": "medium",
               "thumbnailSrc": null,
-              "caption": "Jugando"
+              "caption": "Jugando",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "local__local_media_dublin_IMG_5249_jpg",
@@ -1831,8 +1833,15 @@
               "type": "video",
               "src": "/local-media/dublin/IMG_8946.MOV",
               "size": "medium",
-              "thumbnailSrc": null,
-              "caption": "Admirando la fauna local"
+              "thumbnailSrc": "/fotos/IE/dublin/1780945008846_avm46kz93ta.jpg",
+              "caption": "Admirando la fauna local",
+              "crop": true,
+              "cropData": {
+                "x": 81.0000000000001,
+                "y": 293.52217574668146,
+                "width": 917.9999999999999,
+                "height": 1400.9202502765486
+              }
             },
             {
               "id": "local__local_media_dublin_IMG_8950_jpg",
@@ -1868,9 +1877,11 @@
               "id": "local__local_media_dublin_IMG_8964_MOV",
               "type": "video",
               "src": "/local-media/dublin/IMG_8964.MOV",
-              "size": "medium",
+              "size": "large",
               "thumbnailSrc": null,
-              "caption": "Yo no quiero agua, yo quiero bebido"
+              "caption": "Yo no quiero agua, yo quiero bebido",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "local__local_media_dublin_IMG_8961_MOV",
@@ -1878,7 +1889,9 @@
               "src": "/local-media/dublin/IMG_8961.MOV",
               "size": "medium",
               "thumbnailSrc": null,
-              "caption": "Split de G ma' G"
+              "caption": "Split de G ma' G",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "local__local_media_dublin_IMG_8963_jpg",
@@ -2001,9 +2014,16 @@
               "id": "local__local_media_dublin_IMG_8990_MOV",
               "type": "video",
               "src": "/local-media/dublin/IMG_8990.MOV",
-              "size": "small",
-              "thumbnailSrc": null,
-              "caption": ""
+              "size": "large",
+              "thumbnailSrc": "/fotos/IE/dublin/1780944739318_pq9m1qyhm5j.jpg",
+              "caption": "",
+              "crop": true,
+              "cropData": {
+                "x": 77.60182176438063,
+                "y": 279.92907390763276,
+                "width": 917.9999999999999,
+                "height": 1458.690446971792
+              }
             },
             {
               "id": "1780840356303_jhn8zimjgoi",
@@ -2027,15 +2047,24 @@
               "src": "/local-media/dublin/IMG_8977.MOV",
               "size": "small",
               "thumbnailSrc": null,
-              "caption": ""
+              "caption": "",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "local__local_media_dublin_IMG_5303_MOV",
               "type": "video",
               "src": "/local-media/dublin/IMG_5303.MOV",
               "size": "medium",
-              "thumbnailSrc": null,
-              "caption": "ESA JEBITA ESTA ENTERITA, TIENE TREMENDO... ¡CULO!"
+              "thumbnailSrc": "/fotos/IE/dublin/1780944768692_gz8r67w3ifq.jpg",
+              "caption": "ESA JEBITA ESTA ENTERITA, TIENE TREMENDO... ¡CULO!",
+              "crop": true,
+              "cropData": {
+                "x": 81.0000000000001,
+                "y": 626.5486984928098,
+                "width": 816.0530973451326,
+                "height": 1149.4513015071902
+              }
             },
             {
               "id": "local__local_media_dublin_IMG_8996_jpg",
