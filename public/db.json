@@ -7,6 +7,21 @@
           "description": "",
           "media": [
             {
+              "id": "local__local_media_nueva_york_IMG_20230829_185339_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230829_185339.jpg",
+              "size": "large",
+              "crop": true,
+              "croppedSrc": "/fotos/US/nueva-york/1781286647940_gg27h0h4gcp.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 291.0000000000004,
+                "y": 1508.1768861483683,
+                "width": 3298,
+                "height": 3287.0231138516315
+              }
+            },
+            {
               "id": "local__local_media_nueva_york_IMG_20230828_193654_jpg",
               "type": "photo",
               "src": "/local-media/nueva-york/IMG_20230828_193654.jpg",
@@ -14,16 +29,6 @@
               "crop": false,
               "croppedSrc": null,
               "caption": "Bajo de Paul",
-              "cropData": null
-            },
-            {
-              "id": "local__local_media_nueva_york_IMG_20230829_185339_jpg",
-              "type": "photo",
-              "src": "/local-media/nueva-york/IMG_20230829_185339.jpg",
-              "size": "medium",
-              "crop": false,
-              "croppedSrc": null,
-              "caption": "",
               "cropData": null
             },
             {
@@ -97,7 +102,9 @@
               "src": "/local-media/nueva-york/VID-20230831-WA0003(0).mp4",
               "size": "medium",
               "thumbnailSrc": null,
-              "caption": ""
+              "caption": "",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "local__local_media_nueva_york_VID_20230829_193040_mp4",
@@ -105,7 +112,9 @@
               "src": "/local-media/nueva-york/VID_20230829_193040.mp4",
               "size": "medium",
               "thumbnailSrc": null,
-              "caption": ""
+              "caption": "",
+              "crop": true,
+              "cropData": null
             },
             {
               "id": "1780818167203_rck1bejp1rn",

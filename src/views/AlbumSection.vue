@@ -11,7 +11,7 @@
 
           <div v-if="p.item.type === 'photo'"
             class="album-photo"
-            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.imgW + 'px' }"
+            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.w + 'px' }"
             @click="openLightbox(p.item)">
             <img :src="imgSrc(p.item)" class="album-photo-img" loading="lazy"
               :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
@@ -34,7 +34,7 @@
 
           <div v-else
             class="album-photo"
-            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.imgW + 'px' }"
+            :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.w + 'px' }"
             @click="openLightbox(p.item)">
             <div class="album-video-thumb-wrap" :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }">
               <img v-if="p.item.thumbnailSrc && p.item.crop !== false" :src="p.item.thumbnailSrc" class="album-photo-img" loading="lazy"
