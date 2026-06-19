@@ -5,7 +5,124 @@
         {
           "name": "Nueva York",
           "description": "",
-          "media": []
+          "media": [
+            {
+              "id": "local__local_media_nueva_york_IMG_20230829_185339_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230829_185339.jpg",
+              "size": "large",
+              "crop": true,
+              "croppedSrc": "/fotos/US/nueva-york/1781286647940_gg27h0h4gcp.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 291.0000000000004,
+                "y": 1508.1768861483683,
+                "width": 3298,
+                "height": 3287.0231138516315
+              }
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230828_193654_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230828_193654.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Bajo de Paul",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230829_191026_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230829_191026.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230829_191045_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230829_191045.jpg",
+              "size": "large",
+              "crop": true,
+              "croppedSrc": "/fotos/US/nueva-york/1780837285569_2kaugz3ey4s.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 388.8000000000001,
+                "y": 1430.9647589489423,
+                "width": 3341.9752212389376,
+                "height": 2158.0352410510577
+              }
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230829_221331_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230829_221331.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230830_161710_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230830_161710.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230830_161722_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230830_161722.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_IMG_20230830_184554_jpg",
+              "type": "photo",
+              "src": "/local-media/nueva-york/IMG_20230830_184554.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_VID_20230831_WA0003_0__mp4",
+              "type": "video",
+              "src": "/local-media/nueva-york/VID-20230831-WA0003(0).mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_nueva_york_VID_20230829_193040_mp4",
+              "type": "video",
+              "src": "/local-media/nueva-york/VID_20230829_193040.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "1780818167203_rck1bejp1rn",
+              "type": "text",
+              "size": "s",
+              "content": "Fuimos al hard rock"
+            }
+          ]
         },
         {
           "name": "San Francisco",
@@ -170,7 +287,370 @@
         {
           "name": "Los Ángeles",
           "description": "",
-          "media": []
+          "media": [
+            {
+              "id": "local__local_media_los_angeles_IMG_20230905_WA0006_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG-20230905-WA0006.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230907_WA0004_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG-20230907-WA0004.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230908_WA0000_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG-20230908-WA0000.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230908_WA0005_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG-20230908-WA0005.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "LET'S GO CARLOS!"
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230909_WA0003_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG-20230909-WA0003.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1416_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1416.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1420_MOV",
+              "type": "video",
+              "src": "/local-media/los-angeles/IMG_1420.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1424_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1424.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1427_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1427.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1461_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1461.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1496_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1496.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1540_MOV",
+              "type": "video",
+              "src": "/local-media/los-angeles/IMG_1540.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1557_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1557.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1579_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1579.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1595_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1595.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1612_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1612.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1670_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1670.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1689_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1689.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1697_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1697.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1751_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1751.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1755_MOV",
+              "type": "video",
+              "src": "/local-media/los-angeles/IMG_1755.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1775_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1775.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1786_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1786.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1796_JPG",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1796.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1802_MOV",
+              "type": "video",
+              "src": "/local-media/los-angeles/IMG_1802.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1817_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_1817.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_1861_MOV",
+              "type": "video",
+              "src": "/local-media/los-angeles/IMG_1861.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230906_104534_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230906_104534.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/US/los-angeles/1780837695777_96f8xsx7pb8.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 78.35929203539811,
+                "y": 1574.4106194690266,
+                "width": 2028.3857158289545,
+                "height": 2088.984382993985
+              }
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230906_105915_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230906_105915.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/US/los-angeles/1780837715442_le2jpcn2c1.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 61.99077580544789,
+                "y": 1451.649557522124,
+                "width": 2028.3863402240045,
+                "height": 2015.3269965517836
+              }
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230906_165037_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230906_165037.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230906_175630_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230906_175630.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230907_114557_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230907_114557.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230907_142852_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230907_142852.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230907_173722_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230907_173722.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_IMG_20230907_174134_jpg",
+              "type": "photo",
+              "src": "/local-media/los-angeles/IMG_20230907_174134.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_VID_20230909_WA0002_0__mp4",
+              "type": "video",
+              "src": "/local-media/los-angeles/VID-20230909-WA0002(0).mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_VID_20230906_104136_mp4",
+              "type": "video",
+              "src": "/local-media/los-angeles/VID_20230906_104136.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_VID_20230907_174303_mp4",
+              "type": "video",
+              "src": "/local-media/los-angeles/VID_20230907_174303.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_VID_20230909_171624_1_mp4",
+              "type": "video",
+              "src": "/local-media/los-angeles/VID_20230909_171624_1.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_los_angeles_VID_20230909_175345_mp4",
+              "type": "video",
+              "src": "/local-media/los-angeles/VID_20230909_175345.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            }
+          ]
         }
       ]
     },
@@ -467,7 +947,777 @@
         {
           "name": "San José",
           "description": "",
-          "media": []
+          "media": [
+            {
+              "id": "local__local_media_san_jose_IMG_0022_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0022.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0049_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0049.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0056_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0056.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0071_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0071.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0075_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0075.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0087_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0087.JPG",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CR/san-jose/1780818549313_fmj858ej0h.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 583.8919895948562,
+                "y": 736.8371929337493,
+                "width": 644.7514266022538,
+                "height": 1086.977040734755
+              }
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0100_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0100.JPG",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CR/san-jose/1780818539282_ct5wxi5oax.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 610.5662679756639,
+                "y": 1103.5752212389382,
+                "width": 748.5663716814158,
+                "height": 993.9819379148229
+              }
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0119_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0119.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0133_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0133.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0146_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0146.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0152_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0152.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0160_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0160.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0165_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0165.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0168_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0168.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0173_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0173.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0198_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0198.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0205_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0205.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0214_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0214.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0246_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0246.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0249_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_0249.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0256_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0256.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0267_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0267.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0324_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0324.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0328_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0328.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0331_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0331.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0333_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_0333.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0345_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0345.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0350_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0350.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0368_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0368.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_0385_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_0385.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7495_MP4",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_7495.MP4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7495_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7495.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7536_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7536.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7553_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7553.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7602_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7602.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7613_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7613.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7655_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7655.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7662_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7662.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7670_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7670.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7672_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7672.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7685_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7685.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7753_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7753.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7769_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7769.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7774_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7774.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7779_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7779.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7783_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7783.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7809_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_7809.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7829_202_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7829%202.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7849_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7849.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7851_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7851.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7854_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7854.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7866_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_7866.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7868_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7868.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7878_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7878.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7922_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7922.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_7943_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_7943.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_8005_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_8005.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_8039_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_8039.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9539_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9539.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9549_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9549.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9554_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9554.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9585_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_9585.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9587_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9587.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9608_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9608.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9624_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9624.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9628_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9628.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9633_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9633.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9671_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9671.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9677_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9677.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9680_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9680.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9686_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9686.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9697_JPG",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9697.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9701_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9701.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9771_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_9771.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9781_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9781.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9791_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9791.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9812_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9812.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9817_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9817.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9826_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9826.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9836_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9836.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9948_MOV",
+              "type": "video",
+              "src": "/local-media/san-jose/IMG_9948.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9964_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9964.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9971_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9971.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9980_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9980.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_san_jose_IMG_9982_jpg",
+              "type": "photo",
+              "src": "/local-media/san-jose/IMG_9982.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": ""
+            }
+          ]
         }
       ]
     },
@@ -485,7 +1735,377 @@
         {
           "name": "Dublín",
           "description": "",
-          "media": []
+          "media": [
+            {
+              "id": "local__local_media_dublin_IMG_8934_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8934.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8936_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8936.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780839895289_gg674ahbble",
+              "type": "text",
+              "size": "s",
+              "content": "Primer día en Dublin, paseando y viendo monumentos (haciendo tiempo hasta el concierto)"
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5235_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5235.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5233_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5233.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8942_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8942.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "Jugando",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5249_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5249.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Paseito por el parque",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8938_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8938.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "(sorbito) women",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8941_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8941.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/IE/dublin/1780841054819_eowshnkba7t.jpg",
+              "caption": "pi?",
+              "cropData": {
+                "x": 690.6589515348452,
+                "y": 1265.7982300884955,
+                "width": 1435.7308645602873,
+                "height": 1764.4460721446349
+              }
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8945_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8945.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8946_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8946.MOV",
+              "size": "medium",
+              "thumbnailSrc": "/fotos/IE/dublin/1780945008846_avm46kz93ta.jpg",
+              "caption": "Admirando la fauna local",
+              "crop": true,
+              "cropData": {
+                "x": 81.0000000000001,
+                "y": 293.52217574668146,
+                "width": 917.9999999999999,
+                "height": 1400.9202502765486
+              }
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8950_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8950.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8951_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8951.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Es pequeña y esta rota, pero es la mejor, si la mejor",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8956_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8956.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8964_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8964.MOV",
+              "size": "large",
+              "thumbnailSrc": null,
+              "caption": "Yo no quiero agua, yo quiero bebido",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8961_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8961.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "Split de G ma' G",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8963_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8963.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/IE/dublin/1780839256912_9jm0kmnw9bu.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 455.1613886200222,
+                "y": 851.8937236414547,
+                "width": 1999.497345132743,
+                "height": 3098.9314906837662
+              }
+            },
+            {
+              "id": "1780839788950_fom6enln5bq",
+              "type": "text",
+              "size": "m",
+              "content": "Aprovechamos que Pandres estaba en Dublin para quedar a tomar unas birras y de paso nos reconciliamos (mientras dejamos a Paula abandonada en las garras de Juli 30 minutos)"
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8967_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8967.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Qué random no?",
+              "cropData": null
+            },
+            {
+              "id": "1780839657045_lyucfld4ew",
+              "type": "separator",
+              "label": "CONCIERTO DE MR WORLDWIDE"
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5262_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5262.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5273_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5273.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5264_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5264.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5291_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5291.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5294_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5294.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8973_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8973.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/IE/dublin/1780839340547_tr2j0d39p3q.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 462.2975629148231,
+                "y": 873.3025187534569,
+                "width": 2199.313492118363,
+                "height": 2692.162750190127
+              }
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8975_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8975.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780840154576_3jbiq135jpa",
+              "type": "text",
+              "size": "m",
+              "content": "This the last 20 dollars I got (uh)\nBut I'ma have a good time ballin' tonight (yeah)\nTell the bartender, \"Line up some shots\"\n'Cause I'ma get loose tonight\nShe's on fire, she's so hot\nI'm no liar, she burned up the spot\nLook like Mariah, I took another shot\nAnd told her, \"Drop, drop, drop, drop it like it's hot\""
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8990_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8990.MOV",
+              "size": "large",
+              "thumbnailSrc": "/fotos/IE/dublin/1780944739318_pq9m1qyhm5j.jpg",
+              "caption": "",
+              "crop": true,
+              "cropData": {
+                "x": 77.60182176438063,
+                "y": 279.92907390763276,
+                "width": 917.9999999999999,
+                "height": 1458.690446971792
+              }
+            },
+            {
+              "id": "1780840356303_jhn8zimjgoi",
+              "type": "text",
+              "size": "s",
+              "content": "Believe me, been there, done that\nBut every day above ground is a great day, remember that (da)"
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8976_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8976.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8977_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_8977.MOV",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": "",
+              "crop": true,
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5303_MOV",
+              "type": "video",
+              "src": "/local-media/dublin/IMG_5303.MOV",
+              "size": "medium",
+              "thumbnailSrc": "/fotos/IE/dublin/1780944768692_gz8r67w3ifq.jpg",
+              "caption": "ESA JEBITA ESTA ENTERITA, TIENE TREMENDO... ¡CULO!",
+              "crop": true,
+              "cropData": {
+                "x": 81.0000000000001,
+                "y": 626.5486984928098,
+                "width": 816.0530973451326,
+                "height": 1149.4513015071902
+              }
+            },
+            {
+              "id": "local__local_media_dublin_IMG_8996_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_8996.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/IE/dublin/1780839456088_rghuvmjdo68.jpg",
+              "caption": "Después de más de 45 minutos intentando conseguir un jodido taxi, llegamos a casa",
+              "cropData": {
+                "x": 226.8000000000001,
+                "y": 302.40000000000003,
+                "width": 2570.3999999999996,
+                "height": 3427.2
+              }
+            },
+            {
+              "id": "local__local_media_dublin_IMG_5325_jpg",
+              "type": "photo",
+              "src": "/local-media/dublin/IMG_5325.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/IE/dublin/1780839469918_hkiuizt3sd.jpg",
+              "caption": "ZzzZZzZ",
+              "cropData": {
+                "x": 847.6569638412611,
+                "y": 1651.1576310149337,
+                "width": 1178.8247787610617,
+                "height": 1379.0866712181967
+              }
+            }
+          ]
         }
       ]
     },
@@ -530,8 +2150,592 @@
       "cities": [
         {
           "name": "Zúrich",
-          "description": "",
-          "media": []
+          "description": "Vamos a ver a Dua Lipa a Zurich,, Suiza del 20/05/2022 al 22/05/2022",
+          "media": [
+            {
+              "id": "local__local_media_zurich_IMG_1243_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1243.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220520_140337_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220520_140337.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Mas de 20€ por un fuking pokebowl",
+              "cropData": null
+            },
+            {
+              "id": "1780844850572_t7e8os25f",
+              "type": "text",
+              "size": "m",
+              "content": "Los gorditos llegan a Zurich para ir a ver a Tua Whela. Hacen el check-in y proceden a pasear por el rio. Hace un día bello."
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1246_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1246.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Foto culen",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_180606_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_180606.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220520_163632_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220520_163632.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220520_140938_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220520_140938.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Mofletuda",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220522_WA0007_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG-20220522-WA0007.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1297_MOV",
+              "type": "video",
+              "src": "/local-media/zurich/IMG_1297.MOV",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220520_182444_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220520_182444.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "1780844853024_km9za9e6ngk",
+              "type": "text",
+              "size": "m",
+              "content": "Ya va llegando la hora del concierto. Nos pillamos un turbo mac para no desfallecer, nos ponemos rechulos y listos para darlo todo."
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220520_122610_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220520_122610.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CH/zurich/1780844604804_d6yelrjxy8l.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 135.64778761061936,
+                "y": 81.84070796460178,
+                "width": 1815.6,
+                "height": 2203.5610619469026
+              }
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1298_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1298.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460022_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460022.JPG",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780844853226_phvr30j2f0b",
+              "type": "text",
+              "size": "s",
+              "content": "Put my mind at ease\nPretty please\nI need your hands on me\nSweet relief\nPretty, please"
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_WA0002_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID-20220521-WA0002.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": "Future nostalgia"
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_WA0001_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID-20220521-WA0001.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": "Levitarting"
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1301_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1301.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "AAAAAAAAAAAAHHHH!! ",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220520_222505_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220520_222505.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1312_MOV",
+              "type": "video",
+              "src": "/local-media/zurich/IMG_1312.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1370_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1370.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460027_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460027.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "(nunca ha visto un cisne)",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460028_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460028.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "ÑaM",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1433_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1433.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "tic tac tic tac",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1392_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1392.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460030_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460030.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_110942_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_110942.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_121327_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_121327.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1411_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1411.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1540_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1540.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_125959_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_125959.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CH/zurich/1780844329132_7jy86d7mp8g.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 1840.9212121212122,
+                "y": 591.7151515151517,
+                "width": 2080.2781294389206,
+                "height": 1384.0848484848484
+              }
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_145908_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_145908.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CH/zurich/1780844360311_cxcgju401m.jpg",
+              "caption": "I like big butts and I cannot lie",
+              "cropData": {
+                "x": 343.7097345132743,
+                "y": 771.3486725663716,
+                "width": 1358.5557522123895,
+                "height": 1833.2316086490598
+              }
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1412_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1412.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "1780844853426_o9xtipd6r3",
+              "type": "text",
+              "size": "l",
+              "content": "El gordito: Venga gorda! que he visto que hay un mirador aquí al lado para ver toda la ciudad. Llegamos en nada.\nLa gordita: emmm... vale? Seguro que no está muy lejos?\nEl gordito: ¡Qué va! Tu confía en mi.\n(Mientras la gordita imita a una galleta de jengibre corriendo, se da cuenta de que ha sido tremendamente engañada y esta practicamente escalando una montaña interminable)."
+            },
+            {
+              "id": "local__local_media_zurich_F1460032_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460032.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460033_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460033.JPG",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Worth it!",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1472_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1472.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1492_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1492.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "Se la suda que haya peña",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1542_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1542.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_153237_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220521_153237.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1517_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1517.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1534_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1534.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1545_MOV",
+              "type": "video",
+              "src": "/local-media/zurich/IMG_1545.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1494_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1494.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "La casa de Mickey Mouse",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_150127_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_150127.jpg",
+              "size": "small",
+              "crop": true,
+              "croppedSrc": "/fotos/CH/zurich/1780844395431_7liht6vr3si.jpg",
+              "caption": "",
+              "cropData": {
+                "x": 201.12035398230077,
+                "y": 1009.7094847552545,
+                "width": 1864.704424778761,
+                "height": 2383.6103697110066
+              }
+            },
+            {
+              "id": "1780845370483_c7v2dwmwqvo",
+              "type": "text",
+              "size": "m",
+              "content": "La pareja desesperada no encuentra la forma de bajar la montaña sin desfallecer, cuando de repente...\n- ¿¡Qué es eso!?\n- Es un tren cremallera, confía en mí, nos colamos."
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_165727_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220521_165727.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": "En el shambala"
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_183211_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_183211.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220521_184601_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220521_184601.jpg",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220520_164640_1_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220520_164640_1.mp4",
+              "size": "small",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "1780845374960_x1n1s6vyasc",
+              "type": "text",
+              "size": "m",
+              "content": "Hartos de ver a peña bañarse en el rio, los gorditos no un dudan ni un momento en dirigirse a la fukin otra punta de la ciudad para conseguir un bañador.\nLlegan a la calle de tiendas de Zurich, entran en el HyM y se compran bañadores para refrescarse."
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_183433_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220521_183433.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "Chapuzón, casi me lleva la corriente"
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_181257_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220521_181257.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": ""
+            },
+            {
+              "id": "local__local_media_zurich_VID_20220521_181202_mp4",
+              "type": "video",
+              "src": "/local-media/zurich/VID_20220521_181202.mp4",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "¿Qué tal? MUUUUY FRIAAAAA"
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1546_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1546.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_20220522_120958_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_20220522_120958.jpg",
+              "size": "small",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460034_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460034.JPG",
+              "size": "medium",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_F1460035_JPG",
+              "type": "photo",
+              "src": "/local-media/zurich/F1460035.JPG",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1581_MOV",
+              "type": "video",
+              "src": "/local-media/zurich/IMG_1581.MOV",
+              "size": "medium",
+              "thumbnailSrc": null,
+              "caption": "¿Todo bien?"
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1576_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1576.jpg",
+              "size": "large",
+              "crop": false,
+              "croppedSrc": null,
+              "caption": "PERO QUE BOMBOOOON😍",
+              "cropData": null
+            },
+            {
+              "id": "local__local_media_zurich_IMG_1593_jpg",
+              "type": "photo",
+              "src": "/local-media/zurich/IMG_1593.jpg",
+              "size": "medium",
+              "crop": true,
+              "croppedSrc": "/fotos/CH/zurich/1780844438225_vdoyn6dy6h.jpg",
+              "caption": "Warning!⚠️",
+              "cropData": {
+                "x": 226.79999999999998,
+                "y": 587.8513274336283,
+                "width": 2570.4,
+                "height": 3141.7486725663716
+              }
+            }
+          ]
         }
       ]
     },
@@ -714,6 +2918,7 @@
     "DE",
     "CZ",
     "BR",
-    "PY"
+    "PY",
+    "CN"
   ]
 }
