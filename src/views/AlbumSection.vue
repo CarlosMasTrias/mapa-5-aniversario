@@ -13,8 +13,11 @@
             class="album-photo"
             :style="{ left: p.x + 'px', top: p.y + 'px', '--rot': photoRotation(p.item) + 'deg', width: p.w + 'px' }"
             @click="openLightbox(p.item)">
-            <img :src="imgSrc(p.item)" class="album-photo-img" loading="lazy"
-              :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
+            <picture>
+              <source :srcset="imgSrc(p.item)" type="image/webp" />
+              <img :src="imgFallbackSrc(p.item)" class="album-photo-img" loading="lazy"
+                :style="{ width: p.imgW + 'px', height: p.imgH + 'px' }" />
+            </picture>
             <p v-if="p.item.caption" class="album-photo-caption">{{ p.item.caption }}</p>
           </div>
 
@@ -59,7 +62,10 @@
         </svg>
       </button>
       <div class="lightbox-content" @click.stop>
-        <img v-if="lightboxItem.type === 'photo'" :src="lightboxItem.src" class="lightbox-img" />
+        <picture v-if="lightboxItem.type === 'photo'">
+          <source :srcset="imgSrc(lightboxItem)" type="image/webp" />
+          <img :src="imgFallbackSrc(lightboxItem)" class="lightbox-img" />
+        </picture>
         <video v-else :src="lightboxItem.src" controls autoplay class="lightbox-video" />
         <p v-if="lightboxItem.caption" class="lightbox-caption">{{ lightboxItem.caption }}</p>
       </div>
@@ -123,8 +129,15 @@ export default {
 
     openLightbox(item) { this.lightboxItem = item },
 
+    // WebP source for <picture> — croppedSrc (user crop) or displaySrc (server-generated), fallback to src
     imgSrc(item) {
-      return item.crop !== false && item.croppedSrc ? item.croppedSrc : item.src
+      return (item.crop !== false && item.croppedSrc) ? item.croppedSrc
+        : item.displaySrc || item.src
+    },
+
+    // JPEG fallback for browsers without WebP support
+    imgFallbackSrc(item) {
+      return item.displayFallbackSrc || item.croppedSrc || item.src
     },
 
     _loadMissingRatios(items) {
@@ -173,7 +186,7 @@ export default {
             resolve()
           }
           img.onerror = () => resolve()
-          img.src = item.type === 'video' ? item.thumbnailSrc : this.imgSrc(item)
+          img.src = item.type === 'video' ? item.thumbnailSrc : (this.imgSrc(item) || this.imgFallbackSrc(item))
         })
       })
 
