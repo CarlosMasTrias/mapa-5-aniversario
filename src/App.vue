@@ -5,6 +5,10 @@
         <span class="brand-icon">❤️</span>
         <h1 class="app-title">MAPA DE PAISES <span class="secret-key" @click.stop="revealHungary">G</span>ORDITO<span class="secret-key" @click.stop="hideHungary">S</span></h1>
       </div>
+      <div v-if="user" class="header-user">
+        <span class="header-email">{{ user.email }}</span>
+        <button class="logout-btn" @click="logout">Salir</button>
+      </div>
     </header>
     <main>
       <router-view />
@@ -14,15 +18,31 @@
 
 <script>
 import { secretStore } from '@/store/secret.js'
+import { supabase } from '@/lib/supabase.js'
 
 export default {
   name: 'App',
+  data() {
+    return { user: null }
+  },
+  created() {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      this.user = session?.user ?? null
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      this.user = session?.user ?? null
+    })
+    this._authSub = subscription
+  },
+  beforeUnmount() {
+    this._authSub?.unsubscribe()
+  },
   methods: {
-    revealHungary() {
-      secretStore.hungaryRevealed = true;
-    },
-    hideHungary() {
-      secretStore.hungaryRevealed = false;
+    revealHungary() { secretStore.hungaryRevealed = true },
+    hideHungary() { secretStore.hungaryRevealed = false },
+    async logout() {
+      await supabase.auth.signOut()
+      this.$router.push('/login')
     },
   },
 }
@@ -98,5 +118,42 @@ main {
 .secret-key {
   cursor: inherit;
   user-select: none;
+}
+
+/* ── Header user / logout ────────────────────────────── */
+.header-user {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-email {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.logout-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.28);
+  color: #fca5a5;
 }
 </style>

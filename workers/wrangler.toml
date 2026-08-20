@@ -1,0 +1,14 @@
+name = "mapa-upload"
+main = "upload-worker.js"
+compatibility_date = "2024-01-01"
+account_id = "4c52b11f3362ebb76eacb283aaf86d3a"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "map-album"
+
+[vars]
+PUBLIC_URL = "https://pub-7f4ecd803cc949dc8b6b72367df87af4.r2.dev"
+
+# UPLOAD_SECRET is set as a Worker secret (not stored here):
+#   echo "kPlUczF7CtaN9-q2ZVM9aRZsRY8ud4QFGQ5mTg" | npx wrangler secret put UPLOAD_SECRET

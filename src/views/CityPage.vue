@@ -32,28 +32,30 @@
       </div>
 
       <div class="edit-bar">
-        <button class="edit-btn" @click="scrollToEditor">
+        <button v-if="!isEditing" class="edit-btn" @click="isEditing = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
           </svg>
-          Editar elementos
+          Editar álbum
+        </button>
+        <button v-else class="finish-btn" :disabled="saving" @click="finishEditing">
+          <span v-if="saving" class="upload-spinner upload-spinner--small"></span>
+          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ saving ? 'Guardando...' : 'Finalizar edición' }}
         </button>
       </div>
 
-      <div v-if="media.length === 0" class="media-empty">
-        <div class="media-empty-icon">📸</div>
-        <p class="media-empty-title">Aún no hay fotos ni vídeos</p>
-        <p class="media-empty-sub">Pulsa "Editar elementos" para empezar el álbum de {{ cityData.name }}</p>
-      </div>
-
-      <AlbumSection v-if="media.length > 0" ref="albumSection" />
-
-      <!-- ── Edit section ──────────────────────────────── -->
-      <div class="edit-section-divider" ref="editSection">
-        <div class="edit-section-line"></div>
-        <span class="edit-section-label">Editar álbum</span>
-        <div class="edit-section-line"></div>
-      </div>
+      <!-- VIEW MODE -->
+      <template v-if="!isEditing">
+        <div v-if="media.length === 0" class="media-empty">
+          <div class="media-empty-icon">📸</div>
+          <p class="media-empty-title">Aún no hay fotos ni vídeos</p>
+          <p class="media-empty-sub">Pulsa "Editar álbum" para empezar el álbum de {{ cityData.name }}</p>
+        </div>
+        <AlbumSection v-else ref="albumSection" />
+      </template>
 
       <div v-if="saveError" class="save-error">
         Error al guardar: {{ saveError }}
@@ -65,18 +67,8 @@
         Subiendo {{ uploadProgress }}...
       </div>
 
-      <div class="update-row">
-        <button class="update-btn" :disabled="saving" @click="saveAndRefreshAlbum">
-          <span v-if="saving" class="upload-spinner upload-spinner--small"></span>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-          </svg>
-          {{ saving ? 'Guardando...' : 'Actualizar álbum' }}
-        </button>
-      </div>
-
-      <div class="editor-body">
+      <!-- EDIT MODE -->
+      <div v-if="isEditing" class="editor-body">
         <div class="toolbar">
           <span class="toolbar-count">{{ media.length }} elemento{{ media.length !== 1 ? 's' : '' }}</span>
           <div class="toolbar-actions">
@@ -139,7 +131,10 @@
 
               <template v-if="item.type === 'photo'">
                 <div class="card-preview card-preview--photo" @click="openCropModal(item)">
-                  <img :src="item.croppedSrc || item.src" class="card-img" loading="lazy" />
+                  <picture>
+                    <source v-if="item.thumbnailSrc" :srcset="item.thumbnailSrc" type="image/webp" />
+                    <img :src="item.thumbnailFallbackSrc || item.croppedSrc || item.displaySrc || item.src" class="card-img" loading="lazy" />
+                  </picture>
                   <div class="crop-edit-overlay">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="6 2 3 2 3 22 21 22 21 16"/><line x1="15" y1="9" x2="20" y2="4"/>
@@ -243,14 +238,14 @@
         </div>
       </div><!-- /editor-body -->
 
-      <div class="update-row">
-        <button class="update-btn" :disabled="saving" @click="saveAndRefreshAlbum">
+      <!-- Sticky finish button (fixed, visible anywhere on page while editing) -->
+      <div v-if="isEditing" class="sticky-finish">
+        <button class="finish-btn-sticky" :disabled="saving" @click="finishEditing">
           <span v-if="saving" class="upload-spinner upload-spinner--small"></span>
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            <polyline points="20 6 9 17 4 12"/>
           </svg>
-          {{ saving ? 'Guardando...' : 'Actualizar álbum' }}
+          {{ saving ? 'Guardando...' : 'Finalizar edición' }}
         </button>
       </div>
 
@@ -289,7 +284,6 @@ import AlbumSection from './AlbumSection.vue'
 import { ALL_COUNTRIES } from '@/data/countries.js'
 import { loadDb, saveDb, ensureCountry, uploadPhoto, uploadVideo, deletePhoto } from '@/services/db.js'
 import { toSlug } from '@/utils/slug.js'
-import heic2any from 'heic2any'
 
 export default {
   name: 'CityPage',
@@ -311,6 +305,7 @@ export default {
       cropModalSrc: null,
       dragIndex: null,
       dragOverIndex: null,
+      isEditing: false,
       photoSizes: [
         { val: 'small', label: 'S' },
         { val: 'medium', label: 'M' },
@@ -362,8 +357,21 @@ export default {
       if (e.key === 'Escape' && this.cropModal) this.closeCropModal()
     },
 
-    scrollToEditor() {
-      this.$refs.editSection?.scrollIntoView({ behavior: 'smooth' })
+    async finishEditing() {
+      this.saving = true
+      this.saveError = ''
+      try {
+        await this.saveAll()
+        this.isEditing = false
+        await this.$nextTick()
+        if (this.$refs.albumSection) {
+          const rows = this.buildAlbumRows(this.media.map(item => ({ ...item })))
+          this.$refs.albumSection.update(rows)
+        }
+      } catch (e) {
+        this.saveError = e.message || 'Error al guardar'
+      }
+      this.saving = false
     },
 
     buildAlbumRows(data) {
@@ -395,6 +403,7 @@ export default {
 
     async loadData() {
       this.loading = true
+      this.isEditing = false
       this.db = await loadDb()
       const cities = this.db.countries?.[this.country.id]?.cities || []
       const city = cities.find(c => toSlug(c.name) === this.citySlug) || null
@@ -402,7 +411,17 @@ export default {
       this.description = city?.description || ''
       const dbMedia = (city?.media || []).map(item => {
         if (item.type === 'photo') {
-          return { ...item, size: item.size || 'medium', crop: item.crop !== undefined ? item.crop : true, croppedSrc: item.croppedSrc || null, cropData: item.cropData || null }
+          return {
+            ...item,
+            size: item.size || 'medium',
+            crop: item.crop !== undefined ? item.crop : true,
+            croppedSrc: item.croppedSrc || null,
+            cropData: item.cropData || null,
+            displaySrc: item.displaySrc || null,
+            displayFallbackSrc: item.displayFallbackSrc || null,
+            thumbnailSrc: item.thumbnailSrc || null,
+            thumbnailFallbackSrc: item.thumbnailFallbackSrc || null,
+          }
         }
         if (item.type === 'video') {
           return { ...item, size: item.size || 'medium', thumbnailSrc: item.thumbnailSrc || null, crop: item.crop !== undefined ? item.crop : true, cropData: item.cropData || null }
@@ -503,8 +522,21 @@ export default {
       this.isCropping = true
       try {
         const canvas = this.cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, imageSmoothingQuality: 'high' })
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85))
-        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob })
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', 0.85))
+
+        // For photos, generate 400px thumbnail of the crop for the edit grid
+        let thumbBlob = null
+        if (this.cropModal.type === 'photo') {
+          const THUMB = 400
+          const scale = Math.min(1, THUMB / Math.max(canvas.width, canvas.height))
+          const tc = document.createElement('canvas')
+          tc.width = Math.max(1, Math.round(canvas.width * scale))
+          tc.height = Math.max(1, Math.round(canvas.height * scale))
+          tc.getContext('2d').drawImage(canvas, 0, 0, tc.width, tc.height)
+          thumbBlob = await new Promise(resolve => tc.toBlob(resolve, 'image/webp', 0.72))
+        }
+
+        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob, thumbBlob })
         if (result?.src) {
           const idx = this.media.findIndex(m => m.id === this.cropModal.id)
           if (idx >= 0) {
@@ -514,6 +546,7 @@ export default {
               this.media[idx].cropData = this.cropper.getData()
             } else {
               this.media[idx].croppedSrc = result.src
+              if (result.thumbnailSrc) this.media[idx].thumbnailSrc = result.thumbnailSrc
               this.media[idx].crop = true
               this.media[idx].cropData = this.cropper.getData()
             }
@@ -553,15 +586,19 @@ export default {
       const all = Array.from(event.target.files)
       event.target.value = ''
       this.isUploading = true
+      const isDev = process.env.NODE_ENV === 'development'
       const imageFiles = []
       const videoFiles = []
       for (const f of all) {
-        if (/\.heic$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif') {
-          try {
-            const blob = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.9 })
-            imageFiles.push(new File([blob], f.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' }))
-          } catch {
-            this.saveError = `No se pudo convertir ${f.name}`
+        const isHeic = /\.(heic|heif)$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif'
+        if (isHeic) {
+          if (isDev) {
+            // Dev server decodes HEIC with heic-decode (WASM libheif) — send original as-is
+            imageFiles.push(f)
+          } else {
+            // Prod: convert via browser's native OS decoder (Safari, Edge, Chrome 121+ on macOS)
+            const converted = await this.convertToJpeg(f)
+            if (converted) imageFiles.push(converted)
           }
         } else if (f.type.startsWith('image/')) {
           imageFiles.push(f)
@@ -574,13 +611,20 @@ export default {
       let done = 0
       for (const f of imageFiles) {
         this.uploadProgress = `${++done} / ${total}`
-        const blob = await this.compressImage(f)
-        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob })
+        // In dev, sharp on the server generates all versions from the original file;
+        // generateVersions is unused and would hang for HEIC in non-Safari browsers.
+        const versions = isDev ? {} : await this.generateVersions(f)
+        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, originalFile: f, ...versions })
         if (result?.src) {
           this.media.push({
             id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
             type: 'photo', size: 'medium', crop: true, croppedSrc: null,
-            src: result.src, caption: '',
+            src: result.src,
+            displaySrc: result.displaySrc || null,
+            displayFallbackSrc: result.displayFallbackSrc || null,
+            thumbnailSrc: result.thumbnailSrc || null,
+            thumbnailFallbackSrc: result.thumbnailFallbackSrc || null,
+            caption: '',
           })
         }
       }
@@ -598,20 +642,62 @@ export default {
       this.uploadProgress = ''
     },
 
-    compressImage(file) {
+    // Converts a HEIC/HEIF file to JPEG using the browser's native OS image decoder.
+    // Relies on the OS codec: works on Safari, iOS, and Chrome 108+ on macOS (via Core Image).
+    // Sets saveError and returns null if the browser cannot decode the file.
+    convertToJpeg(file) {
+      return new Promise(resolve => {
+        const url = URL.createObjectURL(file)
+        const img = new Image()
+        img.onload = () => {
+          URL.revokeObjectURL(url)
+          const canvas = document.createElement('canvas')
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          canvas.getContext('2d').drawImage(img, 0, 0)
+          canvas.toBlob(blob => {
+            if (blob) {
+              resolve(new File([blob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' }))
+            } else {
+              this.saveError = `No se pudo convertir ${file.name}`
+              resolve(null)
+            }
+          }, 'image/jpeg', 0.92)
+        }
+        img.onerror = () => {
+          URL.revokeObjectURL(url)
+          this.saveError = `${file.name}: este navegador no puede abrir archivos HEIC. Usa Safari o convierte la foto a JPEG primero.`
+          resolve(null)
+        }
+        img.src = url
+      })
+    },
+
+    // Generates display (1800px) and thumbnail (400px) versions in WebP and JPEG.
+    // Used in production only; dev server regenerates all versions via sharp.
+    generateVersions(file) {
       return new Promise(resolve => {
         const reader = new FileReader()
         reader.onload = e => {
           const img = new Image()
           img.onload = () => {
-            const MAX = 1200
-            let w = img.width, h = img.height
-            if (w > h) { if (w > MAX) { h = Math.round(h * MAX / w); w = MAX } }
-            else { if (h > MAX) { w = Math.round(w * MAX / h); h = MAX } }
-            const canvas = document.createElement('canvas')
-            canvas.width = w; canvas.height = h
-            canvas.getContext('2d').drawImage(img, 0, 0, w, h)
-            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.82)
+            const scale = (maxSide) => {
+              const s = Math.min(1, maxSide / Math.max(img.width, img.height))
+              const c = document.createElement('canvas')
+              c.width = Math.round(img.width * s)
+              c.height = Math.round(img.height * s)
+              c.getContext('2d').drawImage(img, 0, 0, c.width, c.height)
+              return c
+            }
+            const displayCanvas = scale(1800)
+            const thumbCanvas   = scale(400)
+            const out = {}
+            let pending = 4
+            const done = () => { if (--pending === 0) resolve(out) }
+            displayCanvas.toBlob(b => { out.displayBlob    = b; done() }, 'image/webp', 0.82)
+            displayCanvas.toBlob(b => { out.displayFallback = b; done() }, 'image/jpeg', 0.85)
+            thumbCanvas.toBlob(b   => { out.thumbBlob      = b; done() }, 'image/webp', 0.75)
+            thumbCanvas.toBlob(b   => { out.thumbFallback  = b; done() }, 'image/jpeg', 0.80)
           }
           img.src = e.target.result
         }
@@ -630,8 +716,14 @@ export default {
     async removeMedia(index) {
       const item = this.media[index]
       if (item.type === 'photo') {
-        await deletePhoto(item.src)
-        if (item.croppedSrc) await deletePhoto(item.croppedSrc)
+        await Promise.all([
+          item.src && deletePhoto(item.src),
+          item.croppedSrc && deletePhoto(item.croppedSrc),
+          item.displaySrc && deletePhoto(item.displaySrc),
+          item.displayFallbackSrc && deletePhoto(item.displayFallbackSrc),
+          item.thumbnailSrc && deletePhoto(item.thumbnailSrc),
+          item.thumbnailFallbackSrc && deletePhoto(item.thumbnailFallbackSrc),
+        ].filter(Boolean))
       }
       this.media.splice(index, 1)
     },
@@ -686,6 +778,19 @@ export default {
 .edit-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(232,121,160,0.15); border: 1px solid rgba(232,121,160,0.42); color: #f9a8d4; border-radius: 10px; padding: 8px 18px; font-size: 0.82rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.18s; }
 .edit-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 .edit-btn:hover { background: rgba(232,121,160,0.28); color: #fff; border-color: rgba(232,121,160,0.68); }
+
+/* ── Finish editing button (edit bar) ────────────────── */
+.finish-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.42); color: #86efac; border-radius: 10px; padding: 8px 18px; font-size: 0.82rem; font-weight: 600; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: all 0.18s; }
+.finish-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.finish-btn:hover:not(:disabled) { background: rgba(34,197,94,0.28); color: #fff; border-color: rgba(34,197,94,0.68); }
+.finish-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Sticky finish button (fixed) ────────────────────── */
+.sticky-finish { position: fixed; bottom: 28px; right: 28px; z-index: 500; }
+.finish-btn-sticky { display: inline-flex; align-items: center; gap: 8px; background: rgba(34,197,94,0.92); border: 1px solid rgba(34,197,94,0.95); color: #fff; border-radius: 12px; padding: 11px 22px; font-size: 0.88rem; font-weight: 700; font-family: 'Space Grotesk', Arial, sans-serif; cursor: pointer; transition: background 0.18s, box-shadow 0.18s, transform 0.18s; box-shadow: 0 4px 24px rgba(34,197,94,0.3); }
+.finish-btn-sticky svg { width: 16px; height: 16px; flex-shrink: 0; }
+.finish-btn-sticky:hover:not(:disabled) { background: rgba(34,197,94,1); box-shadow: 0 6px 32px rgba(34,197,94,0.45); transform: translateY(-1px); }
+.finish-btn-sticky:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* ── Empty state (album area) ────────────────────────── */
 .media-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px; border: 1px dashed rgba(168,85,247,0.18); border-radius: 18px; gap: 10px; text-align: center; margin-top: 8px; }

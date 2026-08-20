@@ -12,23 +12,27 @@
     "@amcharts/amcharts5": "^5.10.7",
     "@amcharts/amcharts5-fonts": "^5.0.1",
     "@amcharts/amcharts5-geodata": "^5.1.4",
+    "@supabase/supabase-js": "^2.108.2",
     "core-js": "^3.8.3",
     "cropperjs": "^1.6.2",
-    "heic2any": "^0.0.4",
+    "heic-decode": "^2.1.0",
     "vue": "^3.2.13",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1073.0",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "dotenv": "^17.4.2",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "heic-convert": "^2.1.0",
     "multer": "^2.1.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "ws": "^8.21.3"
   },
   "eslintConfig": {
     "root": true,

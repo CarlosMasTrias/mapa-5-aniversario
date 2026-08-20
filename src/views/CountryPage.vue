@@ -199,11 +199,11 @@ export default {
     filteredOptions() {
       if (!this.country) return []
       const all = COUNTRY_CITIES[this.country.id] || []
-      const existing = new Set(this.cities.map(c => c.name.toLowerCase()))
-      const available = all.filter(c => !existing.has(c.toLowerCase()))
+      const existing = new Set(this.cities.map(c => this.normalizeSearch(c.name)))
+      const available = all.filter(c => !existing.has(this.normalizeSearch(c)))
       if (!this.citySearch.trim()) return available
-      const q = this.citySearch.trim().toLowerCase()
-      return available.filter(c => c.toLowerCase().includes(q))
+      const q = this.normalizeSearch(this.citySearch.trim())
+      return available.filter(c => this.normalizeSearch(c).startsWith(q))
     },
   },
   watch: {
@@ -215,6 +215,9 @@ export default {
     },
   },
   methods: {
+    normalizeSearch(s) {
+      return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    },
     flagUrl(code) {
       return `https://flagcdn.com/w80/${code.toLowerCase()}.png`
     },
