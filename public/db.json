@@ -3935,21 +3935,7 @@
         {
           "name": "Chongqing",
           "description": "",
-          "media": [
-            {
-              "id": "1787238386904_8yvr9fvawqf",
-              "type": "photo",
-              "size": "medium",
-              "crop": true,
-              "croppedSrc": null,
-              "src": "https://pub-7f4ecd803cc949dc8b6b72367df87af4.r2.dev/fotos/CN/chongqing/1787238386002_i4q9vqgpzwk.webp",
-              "displaySrc": null,
-              "displayFallbackSrc": null,
-              "thumbnailSrc": null,
-              "thumbnailFallbackSrc": null,
-              "caption": ""
-            }
-          ]
+          "media": []
         }
       ]
     }

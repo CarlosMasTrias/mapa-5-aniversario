@@ -91,10 +91,10 @@ export async function uploadPhoto({ countryId, citySlug, originalFile, displayBl
 
 // ── Upload video ──────────────────────────────────────────
 // file: File object (raw, no conversion)
-// Returns { src: 'https://r2.../videos/file.mp4' }
+// Returns { src: '/videos/...' }
 export async function uploadVideo({ countryId, citySlug, file }) {
   if (IS_DEV) {
-    // Dev: POST multipart to local dev server → server uploads to R2
+    // Dev: POST multipart to local dev server → server saves to public/videos/
     const form = new FormData()
     form.append('countryId', countryId)
     form.append('citySlug', citySlug)
