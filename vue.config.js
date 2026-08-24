@@ -1,11 +1,11 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const fs = require('fs')
+const os = require('os')
 const multer = require('multer')
-
-const DB_PATH    = path.join(__dirname, 'public', 'db.json')
-const FOTOS_DIR  = path.join(__dirname, 'public', 'fotos')
-const VIDEOS_DIR = path.join(__dirname, 'public', 'videos')
+const sharp = require('sharp')
+const heicDecode = require('heic-decode')
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 
 const LOCAL_MEDIA_BASE = 'C:\\Users\\carlo\\OneDrive\\Imágenes\\Aniversario 5'
 
@@ -36,33 +36,66 @@ const CITY_SLUG_TO_FOLDER = {
 const PHOTO_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp'])
 const VIDEO_EXTS = new Set(['.mp4', '.mov', '.avi', '.m4v', '.mkv'])
 
-// multer: fields sent before the file field are already in req.body by the
-// time the destination callback fires, so countryId/citySlug are available.
+// ── Cloudflare R2 (S3-compatible) ────────────────────────
+let _s3 = null
+function getS3() {
+  if (!_s3) {
+    const id = process.env.R2_ACCOUNT_ID
+    if (!id || id === 'your-cloudflare-account-id') {
+      throw new Error('R2_ACCOUNT_ID no configurado. Añádelo a .env.local')
+    }
+    _s3 = new S3Client({
+      region: 'auto',
+      endpoint: `https://${id}.r2.cloudflarestorage.com`,
+      credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+      },
+    })
+  }
+  return _s3
+}
+
+async function uploadToR2(key, body, contentType, contentLength) {
+  await getS3().send(new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: key,
+    Body: body,
+    ContentType: contentType,
+    ...(contentLength != null && { ContentLength: contentLength }),
+  }))
+  return `${process.env.R2_PUBLIC_URL || process.env.VUE_APP_R2_PUBLIC_URL}/${key}`
+}
+
+const MIME_TO_EXT = {
+  'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
+  'image/gif': 'gif', 'image/heic': 'heic', 'image/heif': 'heif',
+}
+const IMAGE_EXTS_RE = /\.(jpe?g|png|webp|gif|heic|heif|tiff?|bmp|avif)$/i
+
+function mimeToExt(mime, originalname) {
+  if (MIME_TO_EXT[mime]) return MIME_TO_EXT[mime]
+  // Browsers on Windows often send HEIC with empty/octet-stream MIME — fall back to filename
+  const fromName = path.extname(originalname || '').slice(1).toLowerCase()
+  return fromName || 'jpg'
+}
+
+// ── Photo upload: memory → R2 (receives original from browser, sharp generates versions) ─────
 const photoUpload = multer({
-  storage: multer.diskStorage({
-    destination(req, _file, cb) {
-      const safeCountry = (req.body.countryId || '').replace(/[^A-Z]/g, '')
-      const safeSlug    = (req.body.citySlug   || '').replace(/[^a-z0-9-]/g, '')
-      const dir = path.join(FOTOS_DIR, safeCountry, safeSlug)
-      fs.mkdirSync(dir, { recursive: true })
-      cb(null, dir)
-    },
-    filename(_req, _file, cb) {
-      cb(null, `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`)
-    },
-  }),
-  limits: { fileSize: 20 * 1024 * 1024, files: 1 },
-  fileFilter(_req, file, cb) { cb(null, file.mimetype.startsWith('image/')) },
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024, files: 1 },
+  // Accept by MIME type OR by filename extension (Chrome/Windows sends HEIC with no MIME type)
+  fileFilter(_req, file, cb) {
+    cb(null, file.mimetype.startsWith('image/') || IMAGE_EXTS_RE.test(file.originalname))
+  },
 })
 
+// ── Video upload: temp disk → R2 ────────────────────────
 const videoUpload = multer({
   storage: multer.diskStorage({
-    destination(_req, _file, cb) {
-      fs.mkdirSync(VIDEOS_DIR, { recursive: true })
-      cb(null, VIDEOS_DIR)
-    },
+    destination(_req, _file, cb) { cb(null, os.tmpdir()) },
     filename(_req, file, cb) {
-      cb(null, `${Date.now()}_${file.originalname.replace(/[^a-z0-9._-]/gi, '')}`)
+      cb(null, `${Date.now()}_${file.originalname.replace(/[^a-z0-9._-]/gi, '_')}`)
     },
   }),
   limits: { fileSize: 4 * 1024 * 1024 * 1024, files: 1 },
@@ -81,74 +114,82 @@ function readBody(req) {
   })
 }
 
-function readDb() {
-  if (!fs.existsSync(DB_PATH)) {
-    const init = { countries: {} }
-    fs.writeFileSync(DB_PATH, JSON.stringify(init, null, 2), 'utf8')
-    return init
-  }
-  return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'))
-}
-
-function writeDb(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8')
-}
-
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
-    // Evita que webpack-dev-server recargue la página cuando se escribe db.json
-    // o cuando se suben nuevas fotos/vídeos a public/fotos y public/videos
-    static: {
-      watch: {
-        ignored: [
-          path.join(__dirname, 'public', 'db.json'),
-          path.join(__dirname, 'public', 'fotos', '**'),
-          path.join(__dirname, 'public', 'videos', '**'),
-        ],
-      },
-    },
     setupMiddlewares(middlewares, devServer) {
       const app = devServer.app
 
-      // GET /api/db  ─ read full database
-      app.get('/api/db', (_req, res) => {
-        try { res.json(readDb()) }
-        catch (e) { res.status(500).json({ error: e.message }) }
-      })
-
-      // POST /api/db  ─ overwrite full database (metadata only, no binary)
-      app.post('/api/db', async (req, res) => {
-        try {
-          const body = await readBody(req)
-          writeDb(body)
-          res.json({ ok: true })
-        } catch (e) { res.status(500).json({ error: e.message }) }
-      })
-
-      // POST /api/photo  ─ stream a compressed photo to public/fotos/
-      // Multipart fields: countryId, citySlug, file (image/jpeg)
+      // POST /api/photo – receives original image from browser, generates 5 versions with sharp
+      // Multipart fields: countryId, citySlug, file (any image/*, including HEIC/HEIF — sharp decodes natively)
+      // Returns { src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc }
       app.post('/api/photo', (req, res) => {
-        photoUpload.single('file')(req, res, err => {
+        photoUpload.single('file')(req, res, async err => {
           if (err) return res.status(400).json({ error: err.message })
           if (!req.file) return res.status(400).json({ error: 'no file' })
-          const safeCountry = (req.body.countryId || '').replace(/[^A-Z]/g, '')
-          const safeSlug    = (req.body.citySlug   || '').replace(/[^a-z0-9-]/g, '')
-          res.json({ src: `/fotos/${safeCountry}/${safeSlug}/${req.file.filename}` })
+          try {
+            const originalBuf = req.file.buffer
+            const ext         = mimeToExt(req.file.mimetype, req.file.originalname)
+            const baseName    = `${Date.now()}_${Math.random().toString(36).slice(2)}`
+
+            // HEIC/HEIF: Sharp's prebuilt Windows binary lacks the H.265 decoder.
+            // Decode with heic-decode (WASM libheif) → raw RGBA → re-encode to JPEG for sharp.
+            const isHeic = ext === 'heic' || ext === 'heif'
+            let sharpBuf = originalBuf
+            if (isHeic) {
+              const { data, width, height } = await heicDecode({ buffer: originalBuf })
+              sharpBuf = await sharp(Buffer.from(data), { raw: { width, height, channels: 4 } })
+                .jpeg({ quality: 95 })
+                .toBuffer()
+            }
+
+            const resize = (px) => sharp(sharpBuf).resize({ width: px, height: px, fit: 'inside', withoutEnlargement: true })
+
+            const [displayWebpBuf, displayJpgBuf, thumbWebpBuf, thumbJpgBuf] = await Promise.all([
+              resize(1800).webp({ quality: 82 }).toBuffer(),
+              resize(1800).jpeg({ quality: 85 }).toBuffer(),
+              resize(400).webp({ quality: 75 }).toBuffer(),
+              resize(400).jpeg({ quality: 80 }).toBuffer(),
+            ])
+
+            const [src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc] = await Promise.all([
+              uploadToR2(`original/${baseName}.${ext}`, originalBuf, req.file.mimetype || `image/${ext}`),
+              uploadToR2(`display/${baseName}.webp`, displayWebpBuf, 'image/webp'),
+              uploadToR2(`display/${baseName}.jpg`, displayJpgBuf, 'image/jpeg'),
+              uploadToR2(`thumb/${baseName}.webp`, thumbWebpBuf, 'image/webp'),
+              uploadToR2(`thumb/${baseName}.jpg`, thumbJpgBuf, 'image/jpeg'),
+            ])
+
+            res.json({ src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc })
+          } catch (e) { res.status(500).json({ error: e.message }) }
         })
       })
 
-      // POST /api/video  ─ stream a video file to public/videos/
+      // POST /api/video – streams video to temp disk then uploads to R2
       // Multipart fields: countryId, citySlug, file (video/*)
       app.post('/api/video', (req, res) => {
-        videoUpload.single('file')(req, res, err => {
+        videoUpload.single('file')(req, res, async err => {
           if (err) return res.status(400).json({ error: err.message })
           if (!req.file) return res.status(400).json({ error: 'no file' })
-          res.json({ src: `/videos/${req.file.filename}` })
+          const tmpPath = req.file.path
+          try {
+            const key = `videos/${req.file.filename}`
+            const src = await uploadToR2(
+              key,
+              fs.createReadStream(tmpPath),
+              req.file.mimetype || 'video/mp4',
+              req.file.size
+            )
+            res.json({ src })
+          } catch (e) {
+            res.status(500).json({ error: e.message })
+          } finally {
+            try { fs.unlinkSync(tmpPath) } catch {}
+          }
         })
       })
 
-      // GET /api/local-media/:citySlug  ─ list browser-displayable files from OneDrive
+      // GET /api/local-media/:citySlug – list browser-displayable files from OneDrive
       app.get('/api/local-media/:citySlug', (req, res) => {
         const folder = CITY_SLUG_TO_FOLDER[req.params.citySlug]
         if (!folder) return res.json([])
@@ -166,27 +207,42 @@ module.exports = defineConfig({
         res.json(result)
       })
 
-      // GET /local-media/:citySlug/:filename  ─ stream a file from the OneDrive folder
+      // GET /local-media/:citySlug/:filename – stream a file from OneDrive
       app.get('/local-media/:citySlug/:filename', (req, res) => {
         const folder = CITY_SLUG_TO_FOLDER[req.params.citySlug]
         if (!folder) return res.status(404).end()
-        // Express already URL-decodes route params; no second decode needed
         const filename = req.params.filename
         if (filename.includes('..') || /[/\\]/.test(filename)) return res.status(400).end()
         const filePath = path.join(LOCAL_MEDIA_BASE, folder, filename)
         res.sendFile(filePath)
       })
 
-      // POST /api/photo/delete  ─ remove a photo file from disk
+      // POST /api/db – save db.json to disk (dev only)
+      app.post('/api/db', async (req, res) => {
+        try {
+          const data = await readBody(req)
+          const dbPath = path.join(__dirname, 'public', 'db.json')
+          fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf8')
+          res.json({ ok: true })
+        } catch (e) { res.status(500).json({ error: e.message }) }
+      })
+
+      // POST /api/photo/delete – delete a photo from R2 (or legacy local path)
       // Body: { src }
       app.post('/api/photo/delete', async (req, res) => {
         try {
           const { src } = await readBody(req)
-          if (!src || !src.startsWith('/fotos/') || src.includes('..')) {
-            return res.status(400).json({ error: 'invalid path' })
+          if (!src) return res.status(400).json({ error: 'invalid path' })
+
+          const r2Base = (process.env.R2_PUBLIC_URL || process.env.VUE_APP_R2_PUBLIC_URL || '').replace(/\/$/, '')
+          if (r2Base && src.startsWith(r2Base + '/')) {
+            const key = src.slice(r2Base.length + 1)
+            await getS3().send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: key }))
+          } else if (src.startsWith('/fotos/') && !src.includes('..')) {
+            // Legacy: local file left over before R2 migration
+            const filePath = path.join(__dirname, 'public', src)
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
           }
-          const filePath = path.join(__dirname, 'public', src)
-          if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
           res.json({ ok: true })
         } catch (e) { res.status(500).json({ error: e.message }) }
       })
