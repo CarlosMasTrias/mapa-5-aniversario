@@ -157,7 +157,7 @@
                     <div class="ctrl-buttons">
                       <button class="ctrl-btn ctrl-btn--rose"
                         :class="{ active: item.crop !== false }"
-                        @click="item.crop = true">Recortar</button>
+                        @click="setCropMode(item)">Recortar</button>
                       <button class="ctrl-btn"
                         :class="{ active: item.crop === false }"
                         @click="item.crop = false">Completa</button>
@@ -222,7 +222,7 @@
                     <div class="ctrl-buttons">
                       <button class="ctrl-btn ctrl-btn--rose"
                         :class="{ active: item.crop !== false }"
-                        @click="item.crop = true">Recortar</button>
+                        @click="setCropMode(item)">Recortar</button>
                       <button class="ctrl-btn"
                         :class="{ active: item.crop === false }"
                         @click="item.crop = false">Completa</button>
@@ -284,6 +284,10 @@ import AlbumSection from './AlbumSection.vue'
 import { ALL_COUNTRIES } from '@/data/countries.js'
 import { loadDb, saveDb, ensureCountry, uploadPhoto, uploadVideo, deletePhoto } from '@/services/db.js'
 import { toSlug } from '@/utils/slug.js'
+
+// Uploading dozens of originals in one go (HEIC decode + multiple sharp resizes each)
+// can make a single request in the batch hang; cap the batch so it stays reliable.
+const MAX_UPLOAD_BATCH = 30
 
 export default {
   name: 'CityPage',
@@ -414,7 +418,7 @@ export default {
           return {
             ...item,
             size: item.size || 'medium',
-            crop: item.crop !== undefined ? item.crop : true,
+            crop: item.crop !== undefined ? item.crop : false,
             croppedSrc: item.croppedSrc || null,
             cropData: item.cropData || null,
             displaySrc: item.displaySrc || null,
@@ -486,6 +490,15 @@ export default {
       this.saving = false
     },
 
+    // "Recortar" button: switches the item to crop mode. If a crop was already
+    // made before, that saved crop is reused as-is (nothing to redo). If it has
+    // never been cropped, there's nothing to show yet, so open the editor directly.
+    setCropMode(item) {
+      item.crop = true
+      const hasExistingCrop = item.type === 'video' ? !!item.thumbnailSrc : !!item.croppedSrc
+      if (!hasExistingCrop) this.openCropModal(item)
+    },
+
     async openCropModal(item) {
       if (item.type === 'video') {
         this.isCropping = true
@@ -536,7 +549,7 @@ export default {
           thumbBlob = await new Promise(resolve => tc.toBlob(resolve, 'image/webp', 0.72))
         }
 
-        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, blob, thumbBlob })
+        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, originalFile: blob, thumbBlob })
         if (result?.src) {
           const idx = this.media.findIndex(m => m.id === this.cropModal.id)
           if (idx >= 0) {
@@ -583,8 +596,15 @@ export default {
     },
 
     async handleFiles(event) {
-      const all = Array.from(event.target.files)
+      let all = Array.from(event.target.files)
       event.target.value = ''
+      this.saveError = ''
+
+      if (all.length > MAX_UPLOAD_BATCH) {
+        this.saveError = `Has seleccionado ${all.length} archivos. Para no saturar la aplicación se suben como máximo ${MAX_UPLOAD_BATCH} de golpe: se procesarán los primeros ${MAX_UPLOAD_BATCH} y el resto puedes añadirlos en otra tanda.`
+        all = all.slice(0, MAX_UPLOAD_BATCH)
+      }
+
       this.isUploading = true
       const isDev = process.env.NODE_ENV === 'development'
       const imageFiles = []
@@ -609,37 +629,59 @@ export default {
       const total = imageFiles.length + videoFiles.length
       if (!total) { this.isUploading = false; return }
       let done = 0
-      for (const f of imageFiles) {
-        this.uploadProgress = `${++done} / ${total}`
-        // In dev, sharp on the server generates all versions from the original file;
-        // generateVersions is unused and would hang for HEIC in non-Safari browsers.
-        const versions = isDev ? {} : await this.generateVersions(f)
-        const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, originalFile: f, ...versions })
-        if (result?.src) {
-          this.media.push({
-            id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-            type: 'photo', size: 'medium', crop: true, croppedSrc: null,
-            src: result.src,
-            displaySrc: result.displaySrc || null,
-            displayFallbackSrc: result.displayFallbackSrc || null,
-            thumbnailSrc: result.thumbnailSrc || null,
-            thumbnailFallbackSrc: result.thumbnailFallbackSrc || null,
-            caption: '',
-          })
+      const failed = []
+      try {
+        for (const f of imageFiles) {
+          this.uploadProgress = `${++done} / ${total}`
+          try {
+            // In dev, sharp on the server generates all versions from the original file;
+            // generateVersions is unused and would hang for HEIC in non-Safari browsers.
+            const versions = isDev ? {} : await this.generateVersions(f)
+            const result = await uploadPhoto({ countryId: this.country.id, citySlug: this.citySlug, originalFile: f, ...versions })
+            if (result?.src) {
+              this.media.push({
+                id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+                type: 'photo', size: 'medium', crop: false, croppedSrc: null,
+                src: result.src,
+                displaySrc: result.displaySrc || null,
+                displayFallbackSrc: result.displayFallbackSrc || null,
+                thumbnailSrc: result.thumbnailSrc || null,
+                thumbnailFallbackSrc: result.thumbnailFallbackSrc || null,
+                caption: '',
+              })
+            } else {
+              failed.push(f.name)
+            }
+          } catch (e) {
+            console.error(`Error subiendo ${f.name}:`, e)
+            failed.push(f.name)
+          }
         }
-      }
-      for (const f of videoFiles) {
-        this.uploadProgress = `${++done} / ${total}`
-        const result = await uploadVideo({ countryId: this.country.id, citySlug: this.citySlug, file: f })
-        if (result?.src) {
-          this.media.push({
-            id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-            type: 'video', src: result.src, size: 'medium', thumbnailSrc: null, crop: true, cropData: null, caption: '',
-          })
+        for (const f of videoFiles) {
+          this.uploadProgress = `${++done} / ${total}`
+          try {
+            const result = await uploadVideo({ countryId: this.country.id, citySlug: this.citySlug, file: f })
+            if (result?.src) {
+              this.media.push({
+                id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+                type: 'video', src: result.src, size: 'medium', thumbnailSrc: null, crop: true, cropData: null, caption: '',
+              })
+            } else {
+              failed.push(f.name)
+            }
+          } catch (e) {
+            console.error(`Error subiendo ${f.name}:`, e)
+            failed.push(f.name)
+          }
         }
+      } finally {
+        this.isUploading = false
+        this.uploadProgress = ''
       }
-      this.isUploading = false
-      this.uploadProgress = ''
+      if (failed.length) {
+        const list = failed.length > 5 ? `${failed.slice(0, 5).join(', ')} y ${failed.length - 5} más` : failed.join(', ')
+        this.saveError = `${failed.length} de ${total} archivo(s) no se pudieron subir: ${list}`
+      }
     },
 
     // Converts a HEIC/HEIF file to JPEG using the browser's native OS image decoder.

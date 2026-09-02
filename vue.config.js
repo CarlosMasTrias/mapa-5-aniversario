@@ -1,11 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const fs = require('fs')
-const os = require('os')
 const multer = require('multer')
 const sharp = require('sharp')
 const heicDecode = require('heic-decode')
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 
 const LOCAL_MEDIA_BASE = 'C:\\Users\\carlo\\OneDrive\\Imágenes\\Aniversario 5'
 
@@ -36,36 +34,14 @@ const CITY_SLUG_TO_FOLDER = {
 const PHOTO_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp'])
 const VIDEO_EXTS = new Set(['.mp4', '.mov', '.avi', '.m4v', '.mkv'])
 
-// ── Cloudflare R2 (S3-compatible) ────────────────────────
-let _s3 = null
-function getS3() {
-  if (!_s3) {
-    const id = process.env.R2_ACCOUNT_ID
-    if (!id || id === 'your-cloudflare-account-id') {
-      throw new Error('R2_ACCOUNT_ID no configurado. Añádelo a .env.local')
-    }
-    _s3 = new S3Client({
-      region: 'auto',
-      endpoint: `https://${id}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-      },
-    })
-  }
-  return _s3
-}
+// ── Local media storage dirs ─────────────────────────────
+const FOTOS_DIR  = path.join(__dirname, 'public', 'fotos')
+const VIDEOS_DIR = path.join(__dirname, 'public', 'videos')
 
-async function uploadToR2(key, body, contentType, contentLength) {
-  await getS3().send(new PutObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME,
-    Key: key,
-    Body: body,
-    ContentType: contentType,
-    ...(contentLength != null && { ContentLength: contentLength }),
-  }))
-  return `${process.env.R2_PUBLIC_URL || process.env.VUE_APP_R2_PUBLIC_URL}/${key}`
-}
+;['original', 'display', 'thumb'].forEach(d =>
+  fs.mkdirSync(path.join(FOTOS_DIR, d), { recursive: true })
+)
+fs.mkdirSync(VIDEOS_DIR, { recursive: true })
 
 const MIME_TO_EXT = {
   'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
@@ -75,25 +51,23 @@ const IMAGE_EXTS_RE = /\.(jpe?g|png|webp|gif|heic|heif|tiff?|bmp|avif)$/i
 
 function mimeToExt(mime, originalname) {
   if (MIME_TO_EXT[mime]) return MIME_TO_EXT[mime]
-  // Browsers on Windows often send HEIC with empty/octet-stream MIME — fall back to filename
   const fromName = path.extname(originalname || '').slice(1).toLowerCase()
   return fromName || 'jpg'
 }
 
-// ── Photo upload: memory → R2 (receives original from browser, sharp generates versions) ─────
+// ── Photo upload: memory → local disk (sharp generates versions) ─────
 const photoUpload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024, files: 1 },
-  // Accept by MIME type OR by filename extension (Chrome/Windows sends HEIC with no MIME type)
   fileFilter(_req, file, cb) {
     cb(null, file.mimetype.startsWith('image/') || IMAGE_EXTS_RE.test(file.originalname))
   },
 })
 
-// ── Video upload: temp disk → R2 ────────────────────────
+// ── Video upload: direct to public/videos/ ───────────────
 const videoUpload = multer({
   storage: multer.diskStorage({
-    destination(_req, _file, cb) { cb(null, os.tmpdir()) },
+    destination(_req, _file, cb) { cb(null, VIDEOS_DIR) },
     filename(_req, file, cb) {
       cb(null, `${Date.now()}_${file.originalname.replace(/[^a-z0-9._-]/gi, '_')}`)
     },
@@ -117,11 +91,24 @@ function readBody(req) {
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    // The static file server watches everything under public/ and forces a full
+    // page reload whenever a watched file changes. Our own upload endpoints write
+    // new files straight into public/fotos, public/videos and public/db.json, so
+    // without this exclusion every upload triggers a reload mid-flight — killing
+    // the in-progress batch and wiping any unsaved media before it can be saved.
+    static: {
+      watch: {
+        ignored: [
+          /public[\\/]fotos[\\/]/,
+          /public[\\/]videos[\\/]/,
+          /public[\\/]db\.json$/,
+        ],
+      },
+    },
     setupMiddlewares(middlewares, devServer) {
       const app = devServer.app
 
-      // POST /api/photo – receives original image from browser, generates 5 versions with sharp
-      // Multipart fields: countryId, citySlug, file (any image/*, including HEIC/HEIF — sharp decodes natively)
+      // POST /api/photo – receives original image, generates 5 versions with sharp, saves to disk
       // Returns { src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc }
       app.post('/api/photo', (req, res) => {
         photoUpload.single('file')(req, res, async err => {
@@ -152,40 +139,31 @@ module.exports = defineConfig({
               resize(400).jpeg({ quality: 80 }).toBuffer(),
             ])
 
-            const [src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc] = await Promise.all([
-              uploadToR2(`original/${baseName}.${ext}`, originalBuf, req.file.mimetype || `image/${ext}`),
-              uploadToR2(`display/${baseName}.webp`, displayWebpBuf, 'image/webp'),
-              uploadToR2(`display/${baseName}.jpg`, displayJpgBuf, 'image/jpeg'),
-              uploadToR2(`thumb/${baseName}.webp`, thumbWebpBuf, 'image/webp'),
-              uploadToR2(`thumb/${baseName}.jpg`, thumbJpgBuf, 'image/jpeg'),
+            await Promise.all([
+              fs.promises.writeFile(path.join(FOTOS_DIR, 'original', `${baseName}.${ext}`), originalBuf),
+              fs.promises.writeFile(path.join(FOTOS_DIR, 'display',  `${baseName}.webp`),   displayWebpBuf),
+              fs.promises.writeFile(path.join(FOTOS_DIR, 'display',  `${baseName}.jpg`),    displayJpgBuf),
+              fs.promises.writeFile(path.join(FOTOS_DIR, 'thumb',    `${baseName}.webp`),   thumbWebpBuf),
+              fs.promises.writeFile(path.join(FOTOS_DIR, 'thumb',    `${baseName}.jpg`),    thumbJpgBuf),
             ])
 
-            res.json({ src, displaySrc, displayFallbackSrc, thumbnailSrc, thumbnailFallbackSrc })
+            res.json({
+              src:                  `/fotos/original/${baseName}.${ext}`,
+              displaySrc:           `/fotos/display/${baseName}.webp`,
+              displayFallbackSrc:   `/fotos/display/${baseName}.jpg`,
+              thumbnailSrc:         `/fotos/thumb/${baseName}.webp`,
+              thumbnailFallbackSrc: `/fotos/thumb/${baseName}.jpg`,
+            })
           } catch (e) { res.status(500).json({ error: e.message }) }
         })
       })
 
-      // POST /api/video – streams video to temp disk then uploads to R2
-      // Multipart fields: countryId, citySlug, file (video/*)
+      // POST /api/video – saves video directly to public/videos/
       app.post('/api/video', (req, res) => {
         videoUpload.single('file')(req, res, async err => {
           if (err) return res.status(400).json({ error: err.message })
           if (!req.file) return res.status(400).json({ error: 'no file' })
-          const tmpPath = req.file.path
-          try {
-            const key = `videos/${req.file.filename}`
-            const src = await uploadToR2(
-              key,
-              fs.createReadStream(tmpPath),
-              req.file.mimetype || 'video/mp4',
-              req.file.size
-            )
-            res.json({ src })
-          } catch (e) {
-            res.status(500).json({ error: e.message })
-          } finally {
-            try { fs.unlinkSync(tmpPath) } catch {}
-          }
+          res.json({ src: `/videos/${req.file.filename}` })
         })
       })
 
@@ -227,22 +205,15 @@ module.exports = defineConfig({
         } catch (e) { res.status(500).json({ error: e.message }) }
       })
 
-      // POST /api/photo/delete – delete a photo from R2 (or legacy local path)
-      // Body: { src }
+      // POST /api/photo/delete – delete a photo from local disk
       app.post('/api/photo/delete', async (req, res) => {
         try {
           const { src } = await readBody(req)
-          if (!src) return res.status(400).json({ error: 'invalid path' })
-
-          const r2Base = (process.env.R2_PUBLIC_URL || process.env.VUE_APP_R2_PUBLIC_URL || '').replace(/\/$/, '')
-          if (r2Base && src.startsWith(r2Base + '/')) {
-            const key = src.slice(r2Base.length + 1)
-            await getS3().send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: key }))
-          } else if (src.startsWith('/fotos/') && !src.includes('..')) {
-            // Legacy: local file left over before R2 migration
-            const filePath = path.join(__dirname, 'public', src)
-            if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+          if (!src || !src.startsWith('/') || src.includes('..')) {
+            return res.status(400).json({ error: 'invalid path' })
           }
+          const filePath = path.join(__dirname, 'public', src)
+          try { fs.unlinkSync(filePath) } catch {}
           res.json({ ok: true })
         } catch (e) { res.status(500).json({ error: e.message }) }
       })

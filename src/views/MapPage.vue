@@ -4,8 +4,10 @@
 
 <script>
 import MapView from '@/components/MapView.vue';
-import { VISITED_COUNTRIES } from '@/data/countries.js';
+import { VISITED_COUNTRIES, ALL_COUNTRIES } from '@/data/countries.js';
 import { loadDb, saveDb } from '@/services/db.js';
+
+const KNOWN_COUNTRY_IDS = new Set(ALL_COUNTRIES.map(c => c.id));
 
 export default {
   name: 'MapPage',
@@ -28,7 +30,7 @@ export default {
     this.visitedCountries = merged;
   },
   methods: {
-    async onCountryUnlocked(countryId) {
+    async onCountryUnlocked({ id: countryId, name: countryName }) {
       if (this.visitedCountries.includes(countryId)) return;
       // Reemplazar el array (no mutar) para que el watcher del hijo detecte el cambio
       this.visitedCountries = [...this.visitedCountries, countryId];
@@ -36,6 +38,13 @@ export default {
         if (!this.db.visitedCountries) this.db.visitedCountries = [];
         if (!this.db.visitedCountries.includes(countryId)) {
           this.db.visitedCountries.push(countryId);
+        }
+        // Territorios fuera de la lista curada de ~195 países (islas, dependencias...)
+        // no tienen traducción propia — guardamos el nombre para poder mostrar su
+        // página de país correctamente más adelante.
+        if (!KNOWN_COUNTRY_IDS.has(countryId) && countryName) {
+          if (!this.db.countryNames) this.db.countryNames = {};
+          this.db.countryNames[countryId] = countryName;
         }
         await saveDb(this.db);
       }

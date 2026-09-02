@@ -8,14 +8,27 @@
     </button>
 
     <div v-if="country" class="country-header">
-      <img class="country-flag" :src="flagUrl(country.id)" :alt="country.name" />
+      <img class="country-flag" :src="flagUrl(country.id)" :alt="country.name" @error="$event.target.style.visibility = 'hidden'" />
       <h2 class="country-name">{{ country.name }}</h2>
     </div>
 
-    <div v-if="!country" class="not-found">País no encontrado.</div>
-
-    <template v-else-if="loading">
+    <template v-if="loading">
       <div class="loading">Cargando...</div>
+    </template>
+
+    <template v-else-if="!country">
+      <div class="not-found">
+        <p>País no encontrado.</p>
+        <p v-if="unknownVisitedId" class="not-found-hint">
+          "{{ unknownVisitedId }}" está marcado como visitado pero no se pudo recuperar su nombre.
+        </p>
+        <button v-if="unknownVisitedId" class="delete-country-btn" style="margin-top:14px" @click="removeUnknownVisited" :disabled="removingUnknown">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+          </svg>
+          {{ removingUnknown ? 'Quitando...' : 'Quitar de visitados' }}
+        </button>
+      </div>
     </template>
 
     <template v-else>
@@ -186,12 +199,30 @@ export default {
       customCity: '',
       showDeleteConfirm: false,
       deleting: false,
+      removingUnknown: false,
     }
   },
   computed: {
     country() {
       const slug = this.$route.params.country
-      return ALL_COUNTRIES.find(c => toSlug(c.name) === slug) || null
+      const known = ALL_COUNTRIES.find(c => toSlug(c.name) === slug)
+      if (known) return known
+      // Territories/dependencies outside the curated ~195 countries (e.g. Heard
+      // Island and McDonald Islands) are treated the same as any other country —
+      // their name just comes from what was captured when marked visited on the
+      // map (MapPage stores it in db.countryNames) instead of a static Spanish list.
+      const names = this.db?.countryNames || {}
+      const entry = Object.entries(names).find(([, name]) => toSlug(name) === slug)
+      return entry ? { id: entry[0], name: entry[1] } : null
+    },
+    // A "visited" id whose route doesn't resolve to a country (its name was never
+    // captured, e.g. legacy data from before countryNames existed) — lets the
+    // not-found screen offer a way to remove it instead of leaving it stuck.
+    unknownVisitedId() {
+      if (this.country || !this.db) return null
+      const slug = this.$route.params.country
+      const ids = this.db.visitedCountries || []
+      return ids.find(id => toSlug(id) === slug) || null
     },
     countrySlug() {
       return this.country ? toSlug(this.country.name) : ''
@@ -207,10 +238,10 @@ export default {
     },
   },
   watch: {
-    country: {
+    '$route.params.country': {
       immediate: true,
-      async handler(val) {
-        if (val) await this.loadData()
+      async handler() {
+        await this.loadData()
       },
     },
   },
@@ -224,17 +255,21 @@ export default {
     async loadData() {
       this.loading = true
       this.db = await loadDb()
-      const rawCities = this.db.countries?.[this.country.id]?.cities || []
-      this.cities = await Promise.all(rawCities.map(async city => {
-        if (city.media?.length > 0) return city
-        try {
-          const slug = toSlug(city.name)
-          const locals = await fetch(`/api/local-media/${slug}`).then(r => r.ok ? r.json() : [])
-          return locals.length ? { ...city, _localCount: locals.length } : city
-        } catch {
-          return city
-        }
-      }))
+      if (this.country) {
+        const rawCities = this.db.countries?.[this.country.id]?.cities || []
+        this.cities = await Promise.all(rawCities.map(async city => {
+          if (city.media?.length > 0) return city
+          try {
+            const slug = toSlug(city.name)
+            const locals = await fetch(`/api/local-media/${slug}`).then(r => r.ok ? r.json() : [])
+            return locals.length ? { ...city, _localCount: locals.length } : city
+          } catch {
+            return city
+          }
+        }))
+      } else {
+        this.cities = []
+      }
       this.loading = false
     },
 
@@ -285,6 +320,18 @@ export default {
     goToCity(city) {
       this.$router.push(`/${this.countrySlug}/${toSlug(city.name)}`)
     },
+    async removeUnknownVisited() {
+      if (!this.unknownVisitedId || !this.db) return
+      this.removingUnknown = true
+      const id = this.unknownVisitedId
+      this.db.visitedCountries = (this.db.visitedCountries || []).filter(x => x !== id)
+      if (this.db.countries?.[id]) delete this.db.countries[id]
+      if (!this.db.removedCountries) this.db.removedCountries = []
+      if (!this.db.removedCountries.includes(id)) this.db.removedCountries.push(id)
+      await saveDb(this.db)
+      this.removingUnknown = false
+      this.$router.push('/')
+    },
     async deleteCountry() {
       if (!this.country) return
       this.deleting = true
@@ -301,6 +348,10 @@ export default {
       if (!db.removedCountries) db.removedCountries = []
       if (!db.removedCountries.includes(this.country.id)) {
         db.removedCountries.push(this.country.id)
+      }
+      // Limpiar el nombre guardado si era un territorio fuera de la lista curada
+      if (db.countryNames?.[this.country.id]) {
+        delete db.countryNames[this.country.id]
       }
       await saveDb(db)
       this.deleting = false
@@ -411,6 +462,8 @@ export default {
 .empty-title { font-size: 1.05rem; font-weight: 600; color: rgba(255,255,255,0.55); }
 .empty-sub { font-size: 0.88rem; color: rgba(255,255,255,0.28); }
 .not-found, .loading { color: rgba(255,255,255,0.35); font-size: 0.95rem; margin-top: 20px; }
+.not-found p { margin: 0 0 8px; }
+.not-found-hint { font-size: 0.85rem; color: rgba(255,255,255,0.25); max-width: 480px; line-height: 1.5; }
 
 /* ── Modal ───────────────────────────────────────────── */
 .modal-overlay {
