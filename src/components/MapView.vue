@@ -210,6 +210,13 @@ export default {
         panX: "translateX",
         panY: "translateY",
         projection: am5map.geoMercator(),
+        // amCharts' own pan clamp (maxPanOut) always multiplies its margin by the
+        // current zoom level, so no single value works everywhere: tight enough to
+        // avoid drifting far off-map when zoomed out, it's too tight when zoomed in
+        // (causing a jump on the first pixels of a click-drag near an edge/pole).
+        // Left intentionally loose here — it's replaced below with our own fixed,
+        // zoom-independent margin.
+        maxPanOut: 10,
       })
     );
 
@@ -257,7 +264,7 @@ export default {
     polygonSeries.mapPolygons.template.events.on("click", (event) => {
       const ctx = event.target.dataItem.dataContext;
       if (ctx.id === 'HU' && !secretStore.hungaryRevealed) return;
-      const name = COUNTRY_NAMES[ctx.id] || ctx.id;
+      const name = COUNTRY_NAMES[ctx.id] || ctx.name || ctx.id;
       if (ctx.visited) {
         this.$router.push('/' + toSlug(name));
       } else {
@@ -276,7 +283,73 @@ export default {
     const zoomControl = chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
     zoomControl.homeButton.set("visible", true);
 
+    // Fixed pixel margin between the map's true geographic edge (e.g. the
+    // southernmost point on the whole map) and the edge of the screen — the same
+    // 80px whether fully zoomed out or zoomed all the way into that exact spot.
+    // amCharts' own maxPanOut (left loose above) is a fraction of the map's
+    // current on-screen size instead, so it scales with zoom: reusing that for a
+    // "margin" either barely lets you reach the edge when zoomed in, or leaves
+    // huge empty space when zoomed out. bounds/center below are the same private
+    // fields amCharts' own pan clamp uses internally to know where the map's
+    // actual edges are — reused here for consistency (fragile across major
+    // amCharts version upgrades, but stable for the installed version).
+    const PAN_MARGIN_PX = 80;
+    const clampPanAxis = (key, axisIndex, centerField) => {
+      // Guards against re-entering this same callback when we call chart.set()
+      // below — without it, some interactions (e.g. an in-flight zoom animation
+      // still adjusting translate on its own) can keep nudging the value just
+      // enough each round that it never stabilizes, recursing until the call
+      // stack overflows.
+      let clamping = false;
+      chart.on(key, (value) => {
+        if (clamping) return;
+        const bounds = chart._mapBounds;
+        if (!bounds) return;
+        const zoomLevel = chart.get("zoomLevel", 1);
+        const size = axisIndex === 0 ? chart.width() : chart.height();
+        const center = chart[centerField];
+        const edgeMin = bounds[0][axisIndex];
+        const edgeMax = bounds[1][axisIndex];
+        const min = (size - PAN_MARGIN_PX) - (edgeMax - center) * zoomLevel;
+        const max = PAN_MARGIN_PX - (edgeMin - center) * zoomLevel;
+        if (min > max) return; // map smaller than the viewport on this axis — nothing to clamp
+        const clamped = Math.min(Math.max(value, min), max);
+        if (clamped !== value) {
+          clamping = true;
+          chart.set(key, clamped);
+          clamping = false;
+        }
+      });
+    };
+    clampPanAxis("translateX", 0, "_centerX");
+    clampPanAxis("translateY", 1, "_centerY");
+
+    // Snapshot the view's transform at the start of every pointer interaction so a
+    // background "click" can be told apart from the release of a click-and-drag pan.
+    // Without this, clicking to start a drag near the map's edges (where the pointer
+    // path crosses mostly empty ocean/background instead of a country polygon) can
+    // still register as a plain "click" once released, snapping the view back home
+    // mid-pan — making it impossible to navigate zoomed-in edge areas.
+    let panStartState = null;
+    chart.chartContainer.events.on("pointerdown", () => {
+      panStartState = {
+        x: chart.get("translateX"),
+        y: chart.get("translateY"),
+        rx: chart.get("rotationX"),
+        ry: chart.get("rotationY"),
+        zoom: chart.get("zoomLevel"),
+      };
+    });
+
     chart.chartContainer.get("background").events.on("click", function () {
+      if (panStartState) {
+        const moved = chart.get("translateX") !== panStartState.x ||
+          chart.get("translateY") !== panStartState.y ||
+          chart.get("rotationX") !== panStartState.rx ||
+          chart.get("rotationY") !== panStartState.ry ||
+          chart.get("zoomLevel") !== panStartState.zoom;
+        if (moved) return;
+      }
       chart.goHome();
     });
 
@@ -325,7 +398,7 @@ export default {
     tinySeries.mapPolygons.template.events.on("click", (event) => {
       const ctx = event.target.dataItem.dataContext;
       if (ctx.id === 'HU' && !secretStore.hungaryRevealed) return;
-      const name = COUNTRY_NAMES[ctx.id] || ctx.id;
+      const name = COUNTRY_NAMES[ctx.id] || ctx.name || ctx.id;
       if (ctx.visited) {
         this.$router.push('/' + toSlug(name));
       } else {
@@ -385,7 +458,7 @@ export default {
       this.popup = { visible: false, countryId: null, countryName: null };
     },
     confirmVisit() {
-      this.$emit('country-unlocked', this.popup.countryId);
+      this.$emit('country-unlocked', { id: this.popup.countryId, name: this.popup.countryName });
       this.closePopup();
     },
   },

@@ -4,6 +4,28 @@ const IS_DEV = process.env.NODE_ENV === 'development'
 const WORKER_URL = (process.env.VUE_APP_R2_WORKER_URL || '').replace(/\/$/, '')
 const UPLOAD_SECRET = process.env.VUE_APP_R2_UPLOAD_SECRET
 
+// A stuck request (e.g. dev server choking on a HEIC decode) must eventually fail
+// instead of hanging the upload queue forever with no error shown to the user.
+const UPLOAD_TIMEOUT_MS = 2 * 60 * 1000
+
+async function fetchWithTimeout(url, options, timeoutMs = UPLOAD_TIMEOUT_MS) {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal })
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      throw new Error(body?.error || `${res.status} ${res.statusText}`)
+    }
+    return res.json()
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('Tiempo de espera agotado subiendo el archivo')
+    throw e
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 // ── Read ──────────────────────────────────────────────────
 export async function loadDb() {
   if (IS_DEV) {
@@ -63,8 +85,7 @@ export async function uploadPhoto({ countryId, citySlug, originalFile, displayBl
     form.append('countryId', countryId)
     form.append('citySlug', citySlug)
     form.append('file', originalFile)
-    const res = await fetch('/api/photo', { method: 'POST', body: form })
-    return res.json()
+    return fetchWithTimeout('/api/photo', { method: 'POST', body: form })
   }
 
   // Production: upload all 5 versions to Cloudflare Worker in parallel
@@ -99,8 +120,7 @@ export async function uploadVideo({ countryId, citySlug, file }) {
     form.append('countryId', countryId)
     form.append('citySlug', citySlug)
     form.append('file', file, file.name)
-    const res = await fetch('/api/video', { method: 'POST', body: form })
-    return res.json()
+    return fetchWithTimeout('/api/video', { method: 'POST', body: form }, 5 * 60 * 1000)
   }
 
   // Production: PUT directly to Cloudflare Worker

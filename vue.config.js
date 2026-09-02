@@ -91,6 +91,20 @@ function readBody(req) {
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    // The static file server watches everything under public/ and forces a full
+    // page reload whenever a watched file changes. Our own upload endpoints write
+    // new files straight into public/fotos, public/videos and public/db.json, so
+    // without this exclusion every upload triggers a reload mid-flight — killing
+    // the in-progress batch and wiping any unsaved media before it can be saved.
+    static: {
+      watch: {
+        ignored: [
+          /public[\\/]fotos[\\/]/,
+          /public[\\/]videos[\\/]/,
+          /public[\\/]db\.json$/,
+        ],
+      },
+    },
     setupMiddlewares(middlewares, devServer) {
       const app = devServer.app
 
